@@ -20,7 +20,7 @@ export default function Account () {
 
     const get_data = async() => {
 
-        const response = await api('account', {user: config.user.id});
+        const response = await api('account', {token: config.user.token});
         setLoader1(false);
         if ( !response.user ) return;
 
@@ -34,7 +34,7 @@ export default function Account () {
 
         e.preventDefault();
         setLoader(true);
-        const response = await api('account/save', {...data, user: config.user.id});
+        const response = await api('account/save', {...data, token: config.user.token});
         setLoader(false);
 
         if ( response.status === true ) {
@@ -53,9 +53,11 @@ export default function Account () {
         e.preventDefault();
         if ( data.new_password !== data.new_password1 )
             return alert_msg('The new password is not equal to confirm password !', 'error');
-        
+        if ( data.new_password === data.old_password )
+            return alert_msg('The new password is equal to old password !', 'error');
+
         setLoader(true);
-        const response = await api('account/password', {...data, user: config.user.id});
+        const response = await api('account/password', {...data, token: config.user.token});
         setLoader(false);
 
         if ( response.status === true ) {

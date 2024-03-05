@@ -54,13 +54,13 @@ export default function Admins () {
     }
     const get = async() => {
 
-        const response = await api('user', {role: 1, user: config.user.id});
+        const response = await api('user', {role: 1, token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 1, user: config.user.id});
+        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 1, token: config.user.token});
         return response;
         
     }

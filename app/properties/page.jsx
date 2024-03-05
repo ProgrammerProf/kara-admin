@@ -95,13 +95,13 @@ export default function Property () {
     }
     const get = async() => {
 
-        const response = await api('product', {user: config.user.id});
+        const response = await api('product', {token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        const response = await api('product/delete', {ids: JSON.stringify(ids), user: config.user.id});
+        const response = await api('product/delete', {ids: JSON.stringify(ids), token: config.user.token});
         return response;
         
     }

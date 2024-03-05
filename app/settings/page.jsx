@@ -17,7 +17,7 @@ export default function Settings () {
 
     const get_data = async() => {
 
-        const response = await api('setting', {user: config.user.id});
+        const response = await api('setting', {token: config.user.token});
 
         setData(response.settings || {});
         setPayments(response.payments || [{}, {}]);
@@ -26,7 +26,7 @@ export default function Settings () {
     const save_data = async() => {
 
         setLoader(true);
-        const response = await api('setting/save', {...data, user: config.user.id});
+        const response = await api('setting/save', {...data, token: config.user.token});
         if ( response.status ) alert_msg('System has been modified successfully');
         else alert_msg('Error, something is went wrong !', 'error');
         setLoader(false);
@@ -36,7 +36,7 @@ export default function Settings () {
 
         setData(_data_);
         setLoader1(true);
-        const response = await api('setting/option', {..._data_, user: config.user.id});
+        const response = await api('setting/option', {..._data_, token: config.user.token});
         if ( response.status ) alert_msg('System has been modified successfully');
         else alert_msg('Error, something is went wrong !', 'error');
         setLoader1(false);
@@ -45,7 +45,7 @@ export default function Settings () {
     const save_payment = async( index ) => {
 
         setLoader2(true);
-        const response = await api('setting/payment', {...payments[index], user: config.user.id});
+        const response = await api('setting/payment', {...payments[index], token: config.user.token});
         if ( response.status ) alert_msg('Payments has been saved successfully');
         else alert_msg('Error, something is went wrong !', 'error');
         setLoader2(false);
@@ -55,7 +55,7 @@ export default function Settings () {
 
         if ( !confirm(`Are you sure to delete ${capitalize(item)} from system ?`) ) return;
         setLoader3(true);
-        const response = await api('setting/delete', {item: item, user: config.user.id});
+        const response = await api('setting/delete', {item: item, token: config.user.token});
         if ( response.status ) alert_msg(`${capitalize(item)} has been deleted successfully`);
         else alert_msg('Error, something is went wrong !', 'error');
         setLoader3(false);

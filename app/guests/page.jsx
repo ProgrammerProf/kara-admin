@@ -58,13 +58,13 @@ export default function Guests () {
     }
     const get = async() => {
 
-        const response = await api('user', {role: 3, user: config.user.id});
+        const response = await api('user', {role: 3, token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 3, user: config.user.id});
+        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 3, token: config.user.token});
         return response;
         
     }

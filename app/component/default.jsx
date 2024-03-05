@@ -26,10 +26,10 @@ export default function DefaultLayout ({ children }) {
 
     const active_user = async() => {
         
-        const response = await api('auth/user', {user: get_session('user')?.id || 0});
-        if ( response.user?.id ) dispatch(toggle_user({...response.user, active: true, update: date()}));
+        const response = await api('auth/user', {token: get_session('user')?.token || ''});
+        if ( response.user?.token ) dispatch(toggle_user({...response.user, active: true, update: date()}));
         else dispatch(toggle_user({}));
-        
+
     }
     const access_url = () => {
 
@@ -49,8 +49,8 @@ export default function DefaultLayout ({ children }) {
         (pathname.includes('/owners') && !config.user.see_owners) ||
         (pathname.includes('/guests') && !config.user.see_guests) ||
         (pathname.includes('/admins') && !config.user.supervisor) ||
-        // (pathname.includes('/settings') && !config.user.super) ||
-        (pathname.includes('/reports') && !config.user.super) ? false : true;
+        (pathname.includes('/settings') && !config.user.super) ||
+        (pathname.includes('/reports') && !config.user.supervisor) ? false : true;
 
         return access
 
@@ -74,15 +74,15 @@ export default function DefaultLayout ({ children }) {
         if ( started ) { setAnimation(false); setTimeout(_ => setAnimation(config.animation)); }
         else setStarted(true);
 
-        if ( !get_session('user')?.id ) return router.replace('/auth/login');
-        if ( get_session('user')?.id && !get_session('user')?.active ) return router.replace('/auth/lock');
+        if ( !get_session('user')?.token ) return router.replace('/auth/login');
+        if ( get_session('user')?.token && !get_session('user')?.active ) return router.replace('/auth/lock');
         active_user();
 
     }, [pathname]);
     useEffect(() => {
 
-        setAuth(get_session('user')?.id ? true : false);
-        setActive((get_session('user')?.id && get_session('user')?.active) ? true : false);
+        setAuth(get_session('user')?.token ? true : false);
+        setActive((get_session('user')?.token && get_session('user')?.active) ? true : false);
         dispatch(toggle_user(get_session('user')));
         dispatch(toggle_theme(localStorage.getItem('theme') || config.theme));
         dispatch(toggle_menu(localStorage.getItem('menu') || config.menu));

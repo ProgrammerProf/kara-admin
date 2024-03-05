@@ -25,16 +25,24 @@ export default function Login () {
             else router.replace('/');
             alert_msg('You have been logged in successfully');
         }
+        else if ( response.status === 'exists' ) {
+            setLoader(false);
+            alert_msg('Error, this e-mail is not exists !', 'error');
+        }
+        else if ( response.status === 'not_match' ) {
+            setLoader(false);
+            alert_msg('Error, the password is not correct !', 'error');
+        }
         else {
             setLoader(false);
-            alert_msg('Error, invalid login information !', 'error');
+            alert_msg('Error, something is went wrong !', 'error');
         }
 
     }
     useEffect(() => {
 
-        if ( get_session('user')?.id && get_session('user')?.active ) return router.replace('/');
-        else if ( get_session('user')?.id ) return router.replace('/auth/lock');
+        if ( get_session('user')?.token && get_session('user')?.active ) return router.replace('/');
+        else if ( get_session('user')?.token ) return router.replace('/auth/lock');
         else setAuth(false);
 
         document.title = "Log In";

@@ -54,13 +54,13 @@ export default function Categories () {
     }
     const get = async() => {
 
-        const response = await api('category', {user: config.user.id});
+        const response = await api('category', {token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        const response = await api('category/delete', {ids: JSON.stringify(ids), user: config.user.id});
+        const response = await api('category/delete', {ids: JSON.stringify(ids), token: config.user.token});
         return response;
         
     }

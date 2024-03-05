@@ -69,7 +69,7 @@ export default function Form_Coupon ({ data, setData, save, model, setModel, loa
 
                                         <label className="w-12 h-6 relative">
                                             
-                                            <input onChange={() => setData({...data, active: !data.active})} checked={data.active || false} id="active" type="checkbox" className="absolute w-full h-full opacity-0 z-10 pointer peer"/>
+                                            <input onChange={() => setData({...data, active: !data.active})} checked={data.active === undefined ? true : data.active} id="active" type="checkbox" className="absolute w-full h-full opacity-0 z-10 pointer peer"/>
 
                                             <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 
                                                 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 

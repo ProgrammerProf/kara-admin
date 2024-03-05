@@ -20,7 +20,7 @@ export default function Form_Properties ({ id }) {
 
     const default_item = async() => {
 
-        const response = await api('product/default', {user: config.user.id});
+        const response = await api('product/default', {token: config.user.token});
 
         setData({
             id: 0, name: '', location: '', country: '', city: '', street: '',
@@ -45,7 +45,7 @@ export default function Form_Properties ({ id }) {
     }
     const get_item = async() => {
 
-        const response = await api('product', {id: id, user: config.user.id});
+        const response = await api('product', {id: id, token: config.user.token});
         if ( !response.data?.id ) return router.replace('/properties');
         setData(response.data);
         setLoader(false);
@@ -69,7 +69,7 @@ export default function Form_Properties ({ id }) {
             deleted_files: JSON.stringify(data.deleted_files),
             owner: data.owner?.id || 0,
             category: data.category?.id || 0,
-            user: config.user.id
+            token: config.user.token
         };
         const response = await api(`product/${id ? 'edit' : 'add'}`, request_data);
         return response;
@@ -97,7 +97,7 @@ export default function Form_Properties ({ id }) {
         if ( !confirm('Are you sure to delete this product ?') ) return;
 
         setLoader(true);
-        const response = await api('product/delete', {ids: JSON.stringify([id]), user: config.user.id});
+        const response = await api('product/delete', {ids: JSON.stringify([id]), token: config.user.token});
 
         if ( response.status ) {
             alert_msg(`Product ( ${id} ) has been deleted successfully`);

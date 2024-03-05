@@ -27,7 +27,7 @@ export default function Form_Category ({ id }) {
     }
     const get_item = async() => {
 
-        const response = await api('category', {id: id, user: config.user.id});
+        const response = await api('category', {id: id, token: config.user.token});
         if ( !response.data?.id ) return router.replace('/categories');
         setData(response.data);
         setLoader(false);
@@ -38,7 +38,7 @@ export default function Form_Category ({ id }) {
         
         if ( !data.name ) return alert_msg('Error, category name required !', 'error');
         setLoader(true);
-        const response = await api(`category/${id ? 'edit' : 'add'}`, {...data, user: config.user.id});
+        const response = await api(`category/${id ? 'edit' : 'add'}`, {...data, token: config.user.token});
 
         if ( response.status === true ) {
             if ( id ) alert_msg(`Category ( ${id} ) updated successfully`);
@@ -56,7 +56,7 @@ export default function Form_Category ({ id }) {
         if ( !confirm('Are you sure to delete this category ?') ) return;
 
         setLoader(true);
-        const response = await api('category/delete', {ids: JSON.stringify([id]), user: config.user.id});
+        const response = await api('category/delete', {ids: JSON.stringify([id]), token: config.user.token});
 
         if ( response.status ) {
             alert_msg(`Category ( ${id} ) has been deleted successfully`);

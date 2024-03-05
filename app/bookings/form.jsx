@@ -20,7 +20,7 @@ export default function Form_Booking ({ id }) {
 
     const default_item = async() => {
 
-        const response = await api('booking/default', {user: config.user.id});
+        const response = await api('booking/default', {token: config.user.token});
 
         setData({
             id: 0,
@@ -52,7 +52,7 @@ export default function Form_Booking ({ id }) {
     }
     const get_item = async() => {
 
-        const response = await api('booking', {id: id, user: config.user.id});
+        const response = await api('booking', {id: id, token: config.user.token});
         if ( !response.data?.id ) return router.replace('/bookings');
         setData(response.data);
         setLoader(false);
@@ -64,7 +64,7 @@ export default function Form_Booking ({ id }) {
         if ( !data.product_id ) return alert_msg('Error, select product to complete booking !', 'error');
         
         setLoader(true);
-        const response = await api(`booking/${id ? 'edit' : 'add'}`, {...data, user: config.user.id});
+        const response = await api(`booking/${id ? 'edit' : 'add'}`, {...data, token: config.user.token});
 
         if ( response.status === true ) {
             if ( id ) alert_msg(`Booking ( ${id} ) updated successfully`);
@@ -81,7 +81,7 @@ export default function Form_Booking ({ id }) {
         if ( !confirm('Are you sure to delete this booking ?') ) return;
 
         setLoader(true);
-        const response = await api('booking/delete', {ids: JSON.stringify([id]), user: config.user.id});
+        const response = await api('booking/delete', {ids: JSON.stringify([id]), token: config.user.token});
 
         if ( response.status ) {
             alert_msg(`Booking ( ${id} ) has been deleted successfully`);

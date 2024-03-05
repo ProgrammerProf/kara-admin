@@ -16,6 +16,7 @@ export default function Reports () {
         value = value.split("_");
         if ( value.length === 1 ) value = capitalize(value[0]);
         if ( value.length === 2 ) value = `${capitalize(value[0])} ${capitalize(value[1])}`;
+        if ( value.length === 3 ) value = `${capitalize(value[0])} ${capitalize(value[1])} ${capitalize(value[2])}`;
         return value
 
     }
@@ -68,13 +69,15 @@ export default function Reports () {
                 render: ({ host, id }) => <div className="font-semibold select-text default truncate max-w-[10rem]">{host}</div>,
             },
             {
-                accessor: 'item', sortable: true, title: 'Link',
+                accessor: 'item', sortable: true, title: 'Url',
                 render: ({ item, id }) =>
                 item.link ?
-                    <div className="flex items-center font-semibold pointer hover:text-primary underline" 
+                    <div className="flex items-center font-semibold pointer hover:text-primary hover:underline" 
                         onClick={() => router.push(item.link)}>
-                        <div className="font-semibold select-text truncate max-w-[12rem]">{item.name}</div>
-                    </div> : <div className="font-semibold select-text">--</div>
+                        <div className="font-semibold select-text truncate max-w-[12rem]">( {item.action_id} ) - {item.name}</div>
+                    </div>
+                : item.action_id ? <div className="font-semibold select-text">( {item.action_id} ) - ?</div>
+                : <div className="font-semibold select-text">--</div> 
                 ,
             },
             {
@@ -108,13 +111,13 @@ export default function Reports () {
     }
     const get = async() => {
 
-        const response = await api('report', {user: config.user.id});
+        const response = await api('report', {token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        await api('report/delete', {ids: JSON.stringify(ids), user: config.user.id});
+        await api('report/delete', {ids: JSON.stringify(ids), token: config.user.token});
 
     }
     const search = ( items, query ) => {

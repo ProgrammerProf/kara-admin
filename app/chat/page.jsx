@@ -91,8 +91,7 @@ export default function Chat () {
     }
     const get_data = async() => {
 
-        const response = await api('chat', {id: config.user?.id, user: config.user.id});
-
+        const response = await api('chat', {token: config.user.token});
         let contacts = response.contacts?.sort((a, b) => diff_date(a.messages.slice(-1)[0]?.date, b.messages.slice(-1)[0]?.date)) || [];
 
         set_data(contacts);
@@ -105,7 +104,7 @@ export default function Chat () {
         if ( data.find(_ => _.id === id)?.opened ) return scroll(0, false);
 
         setLoader(true);
-        const response  = await api('chat/get', {id: id, user: config.user.id});
+        const response  = await api('chat/get', {id: id, token: config.user.token});
         let new_data = data.map((item) => {
             if ( item.id === id ) {
                 item.messages = response.messages || [];
@@ -138,7 +137,7 @@ export default function Chat () {
         if ( contact === id ) setContact(0);
         setData(data.filter(_ => _.id !== id));
         setContacts(data.filter(_ => _.id !== id));
-        const response = await api('chat/delete', {id: id, for_all: for_all || false, user: config.user.id});
+        const response = await api('chat/delete', {id: id, for_all: for_all || false, token: config.user.token});
 
     }
     const send_message = async( file, link ) => {
@@ -147,7 +146,7 @@ export default function Chat () {
 
         let msg = {
             id: id,
-            user: config.user.id,
+            token: config.user.token,
             sender: config.user.id,
             receiver: data.find(_ => _.id === contact).user?.id || 0,
             content: textInput.current?.value || '',
@@ -195,7 +194,7 @@ export default function Chat () {
         _data_.messages = _data_.messages.map(_ => { _.receiver === config.user.id ? _.active = true : ''; _.readen = true; return _ });
         _data_.unread = 0;
         setData([...new_data]);
-        const response = await api('chat/active', {id: id, user: config.user?.id});
+        const response = await api('chat/active', {id: id, token: config.user.token});
 
     }
     const select = ( e, id ) => {
@@ -250,7 +249,7 @@ export default function Chat () {
         get_data();
         document.title = "Chat box";
         setTimeout(_ => textInput.current?.focus(), 100);        
-        // setSocket(new WebSocket(`ws://${host}/chat/${config.user.id}`));
+        // setSocket(new WebSocket(`ws://${host}/chat/${config.user.token}`));
         // socket.onmessage = (e) => on_message(JSON.parse(e.data));
 
     }, []);

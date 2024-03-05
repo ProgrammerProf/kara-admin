@@ -58,13 +58,13 @@ export default function Owners () {
     }
     const get = async() => {
 
-        const response = await api('user', {role: 2, user: config.user.id});
+        const response = await api('user', {role: 2, token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 2, user: config.user.id});
+        const response = await api('user/delete', {ids: JSON.stringify(ids), role: 2, token: config.user.token});
         return response;
         
     }

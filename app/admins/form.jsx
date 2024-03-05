@@ -62,7 +62,7 @@ export default function Form_Admin ({ id }) {
     }
     const get_item = async() => {
 
-        const response = await api('user', {id: id, role: 1, user: config.user.id});
+        const response = await api('user', {id: id, role: 1, token: config.user.token});
         if ( !response.data?.id ) return router.replace('/admins');
         setData(response.data);
         setLoader(false);
@@ -76,7 +76,7 @@ export default function Form_Admin ({ id }) {
         if ( !data.password ) return alert_msg('Error, admin password required !', 'error');
 
         setLoader(true);
-        const response = await api(`user/${id ? 'edit' : 'add'}`, {...data, role: 1, user: config.user.id});
+        const response = await api(`user/${id ? 'edit' : 'add'}`, {...data, role: 1, token: config.user.token});
 
         if ( response.status === true ) {
             if ( id ) alert_msg(`Admin ( ${id} ) updated successfully`);
@@ -94,7 +94,7 @@ export default function Form_Admin ({ id }) {
         if ( !confirm('Are you sure to delete this admin ?') ) return;
 
         setLoader(true);
-        const response = await api('user/delete', {ids: JSON.stringify([id]), role: 1, user: config.user.id});
+        const response = await api('user/delete', {ids: JSON.stringify([id]), role: 1, token: config.user.token});
 
         if ( response.status ) {
             alert_msg(`Admin ( ${id} ) has been deleted successfully`);

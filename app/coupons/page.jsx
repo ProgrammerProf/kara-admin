@@ -81,13 +81,13 @@ export default function Coupons () {
     }
     const get = async() => {
 
-        const response = await api('coupon', {user: config.user.id});
+        const response = await api('coupon', {token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        await api('coupon/delete', {ids: JSON.stringify(ids), user: config.user.id});
+        await api('coupon/delete', {ids: JSON.stringify(ids), token: config.user.token});
 
     }
     const search = ( items, query ) => {
@@ -110,7 +110,7 @@ export default function Coupons () {
         if ( !coupon.code ) return alert_msg('Error, coupon code required !', 'error');
         setLoader(true);
 
-        const response = await api(`coupon/${coupon.id ? 'edit' : 'add'}`, {...coupon, user: config.user.id});
+        const response = await api(`coupon/${coupon.id ? 'edit' : 'add'}`, {...coupon, token: config.user.token});
         setLoader(false);
         if ( !response.status ) return alert_msg('Error, something went wrong !', 'error');
         if ( response.status === 'exists' ) return alert_msg('Error, this coupon is already exists !', 'error');

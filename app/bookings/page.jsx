@@ -82,13 +82,13 @@ export default function Bookings () {
     }
     const get = async() => {
 
-        const response = await api('booking', {user: config.user.id});
+        const response = await api('booking', {token: config.user.token});
         setData(response.data || []);
 
     }
     const delete_ = async( ids ) => {
 
-        await api('booking/delete', {ids: JSON.stringify(ids), user: config.user.id});
+        await api('booking/delete', {ids: JSON.stringify(ids), token: config.user.token});
 
     }
     const search = ( items, query ) => {

@@ -45,7 +45,7 @@ export default function Mail () {
     }
     const get_data = async() => {
 
-        const response = await api('mail', {user: config.user.id});
+        const response = await api('mail', {token: config.user.token});
 
         let me = {
             id: config.user.id,
@@ -206,7 +206,7 @@ export default function Mail () {
             ...mail,
             ...list_files,
             files_length: files?.length,
-            user: config.user.id,
+            token: config.user.token,
             receiver: mail.receiver.id
         }
         const response = await api('mail/send', request_data);
@@ -238,7 +238,7 @@ export default function Mail () {
             type === 'send' ? setSend(_data_) : setInbox(_data_);
 
             alert_msg(` ( ${ids.length} ) Mails has been removed successfully !`);
-            const response = await api('mail/delete', {ids: JSON.stringify(ids), user: config.user.id});
+            const response = await api('mail/delete', {ids: JSON.stringify(ids), token: config.user.token});
 
         }
         if ( action === 'readen' ) {
@@ -249,7 +249,7 @@ export default function Mail () {
             type === 'send' ? setSend(_data_) : setInbox(_data_);
 
             alert_msg(` ( ${ids.length} ) Mails marked as readen successfully !`);
-            const response = await api('mail/actions', {ids: JSON.stringify(ids), user: config.user.id, action: 'readen'});
+            const response = await api('mail/actions', {ids: JSON.stringify(ids), token: config.user.token, action: 'readen'});
 
         }
         if ( action === 'unread' ) {
@@ -260,7 +260,7 @@ export default function Mail () {
             type === 'send' ? setSend(_data_) : setInbox(_data_);
 
             alert_msg(` ( ${ids.length} ) Mails marked as unread successfully !`);
-            const response = await api('mail/actions', {ids: JSON.stringify(ids), user: config.user.id, action: 'unread'});
+            const response = await api('mail/actions', {ids: JSON.stringify(ids), token: config.user.token, action: 'unread'});
 
         }
         if ( action === 'star' ) {
@@ -268,7 +268,7 @@ export default function Mail () {
             let item = data.find(_ => _.id === id);
             item.star = !item.star;
             searchMails();
-            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), user: config.user.id, action: 'star'});
+            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), token: config.user.token, action: 'star'});
 
         }
         if ( action === 'important' ) {
@@ -276,7 +276,7 @@ export default function Mail () {
             let item = data.find(_ => _.id === id);
             item.important = !item.important;
             searchMails();
-            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), user: config.user.id, action: 'important'});
+            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), token: config.user.token, action: 'important'});
 
         }
         if ( action === 'open' ) {
@@ -286,7 +286,7 @@ export default function Mail () {
             setTab(2);
             if ( item.active ) return;
             item.active = true;
-            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), user: config.user.id, action: 'readen'});
+            const response = await api('mail/actions', {ids: JSON.stringify([item.id]), token: config.user.token, action: 'readen'});
 
         }
 
@@ -305,7 +305,7 @@ export default function Mail () {
 
         document.title = "Mail box";
         get_data();
-        // setSocket(new WebSocket(`ws://${host}/mail/${config.user.id}`));
+        // setSocket(new WebSocket(`ws://${host}/mail/${config.user.token}`));
         // socket.onmessage = (e) => on_message(JSON.parse(e.data));
         
     }, []);

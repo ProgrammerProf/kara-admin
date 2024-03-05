@@ -209,15 +209,13 @@ export default function Sidebar () {
                             {
                                 config.user.see_owners ||
                                 config.user.see_guests || 
-                                config.user.supervisor || 
-                                config.user.super ?
+                                config.user.supervisor ?
                                 <div className="h-px w-full border-b border-[#e0e6ed] dark:border-[#1b2e4b]" style={{margin: '.7rem 0'}}></div> : ''
                             }
                             {
                                 config.user.see_owners ||
                                 config.user.see_guests || 
-                                config.user.supervisor || 
-                                config.user.super ?
+                                config.user.supervisor ?
                                 <li className="menu nav-item">
 
                                     <button type="button" className={`${currentMenu === 'users' ? 'active' : ''} nav-link group w-full`} onClick={() => currentMenu === 'users' ? setCurrentMenu('') : setCurrentMenu('users')}>
@@ -293,7 +291,7 @@ export default function Sidebar () {
                                 </li>
                             }
                             {
-                                config.user.super &&
+                                config.user.supervisor &&
                                 <li className="nav-item">
 
                                     <Link href="/reports" className="group">

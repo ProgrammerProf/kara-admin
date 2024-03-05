@@ -20,7 +20,7 @@ export default function Lockscreen () {
 
         e.preventDefault();
         setLoader(true);
-        const response = await api('auth/unlock', {user: config.user.id, password: data.password || ''});
+        const response = await api('auth/unlock', {token: config.user.token, password: data.password});
         
         if ( response.user ) {
             set_session('user', {...response.user, active: true, update: date()});
@@ -40,7 +40,7 @@ export default function Lockscreen () {
     }
     useEffect(() => {
 
-        if ( get_session('user')?.id && get_session('user')?.active ) return router.replace('/');
+        if ( get_session('user')?.token && get_session('user')?.active ) return router.replace('/');
         else setAuth(false);
 
         setTimeout(_ => input.current?.focus(), 100);

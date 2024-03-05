@@ -26,7 +26,7 @@ export default function Home () {
 
     const get_data = async() => {
 
-        const response = await api('home/statistics', {user: config.user.id});
+        const response = await api('home/statistics', {token: config.user.token});
         
         setProperties(response.properties || {});
         setCoupons(response.coupons || {});
@@ -42,28 +42,28 @@ export default function Home () {
 
         setStatistics({
             'daily': [
-                {name: 'Properties', data: response.properties?.series_daily},
-                {name: 'Coupons', data: response.coupons?.series_daily},
-                {name: 'Bookings', data: response.bookings?.series_daily},
-                {name: 'Visitors', data: response.visitors?.series_daily},
+                {name: 'Properties', data: response.properties?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Coupons', data: response.coupons?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Bookings', data: response.bookings?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Visitors', data: response.visitors?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'weekly': [
-                {name: 'Properties', data: response.properties?.series_weekly},
-                {name: 'Coupons', data: response.coupons?.series_weekly},
-                {name: 'Bookings', data: response.bookings?.series_weekly},
-                {name: 'Visitors', data: response.visitors?.series_weekly},
+                {name: 'Properties', data: response.properties?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Coupons', data: response.coupons?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Bookings', data: response.bookings?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Visitors', data: response.visitors?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'monthly': [
-                {name: 'Properties', data: response.properties?.series_monthly},
-                {name: 'Coupons', data: response.coupons?.series_monthly},
-                {name: 'Bookings', data: response.bookings?.series_monthly},
-                {name: 'Visitors', data: response.visitors?.series_monthly},
+                {name: 'Properties', data: response.properties?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Coupons', data: response.coupons?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Bookings', data: response.bookings?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Visitors', data: response.visitors?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
             ],
             'yearly': [
-                {name: 'Properties', data: response.properties?.series_yearly},
-                {name: 'Coupons', data: response.coupons?.series_yearly},
-                {name: 'Bookings', data: response.bookings?.series_yearly},
-                {name: 'Visitors', data: response.visitors?.series_yearly},
+                {name: 'Properties', data: response.properties?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Coupons', data: response.coupons?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Bookings', data: response.bookings?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: 'Visitors', data: response.visitors?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
             ],
         });
 
@@ -92,7 +92,7 @@ export default function Home () {
     useEffect(() => {
 
         document.title = 'Dashboard';
-        if ( config.user.statistics ) get_data();
+        get_data();
 
     }, []);
 
@@ -169,8 +169,8 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    <li><button onClick={() => router.push('/bookings')} type="button">All Bookings</button></li>
-                                    <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li>
+                                    { config.user.see_bookings && <li><button onClick={() => router.push('/bookings')} type="button">All Bookings</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
                                     <li onClick={delete_orders}><button type="button">Mark as Read</button></li>
                                 </ul>
 
@@ -302,10 +302,10 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    <li><button onClick={() => router.push('/guests')} type="button">All Guests</button></li>
-                                    <li><button onClick={() => router.push('/owners')} type="button">All Owners</button></li>
-                                    <li><button onClick={() => router.push('/admins')} type="button">All Admins</button></li>
-                                    <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li>
+                                    { config.user.see_guests && <li><button onClick={() => router.push('/guests')} type="button">All Guests</button></li> }
+                                    { config.user.see_owners && <li><button onClick={() => router.push('/owners')} type="button">All Owners</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/admins')} type="button">All Admins</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
                                     <li onClick={delete_users}><button type="button">Mark as Read</button></li>
                                 </ul>
 
@@ -409,8 +409,8 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    <li><button onClick={() => router.push('/properties')} type="button">All Properties</button></li>
-                                    <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li>
+                                    { config.user.see_products && <li><button onClick={() => router.push('/properties')} type="button">All Properties</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
                                     <li onClick={delete_products}><button type="button">Mark as Read</button></li>
                                 </ul>
 

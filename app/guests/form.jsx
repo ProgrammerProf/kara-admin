@@ -45,7 +45,7 @@ export default function Form_Guest ({ id }) {
     }
     const get_item = async() => {
 
-        const response = await api('user', {id: id, role: 3, user: config.user.id});
+        const response = await api('user', {id: id, role: 3, token: config.user.token});
         if ( !response.data?.id ) return router.replace('/guests');
         setData(response.data);
         setLoader(false);
@@ -59,7 +59,7 @@ export default function Form_Guest ({ id }) {
         if ( !data.password ) return alert_msg('Error, guest password required !', 'error');
         
         setLoader(true);
-        const response = await api(`user/${id ? 'edit' : 'add'}`, {...data, role: 3, user: config.user.id});
+        const response = await api(`user/${id ? 'edit' : 'add'}`, {...data, role: 3, token: config.user.token});
 
         if ( response.status === true ) {
             if ( id ) alert_msg(`Guest ( ${id} ) updated successfully`);
@@ -77,7 +77,7 @@ export default function Form_Guest ({ id }) {
         if ( !confirm('Are you sure to delete this guest ?') ) return;
 
         setLoader(true);
-        const response = await api('user/delete', {ids: JSON.stringify([id]), role: 3, user: config.user.id});
+        const response = await api('user/delete', {ids: JSON.stringify([id]), role: 3, token: config.user.token});
 
         if ( response.status ) {
             alert_msg(`Guest ( ${id} ) has been deleted successfully`);
