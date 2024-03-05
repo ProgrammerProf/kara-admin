@@ -57,7 +57,7 @@
         "sortablejs": "^1.15.0",
         "sweetalert2": "^11.7.1",
         "sweetalert2-react-content": "^5.0.7",
-        "swiper": "^8.4.7",
+        "swiper": "^6.8.4",
         "swiper-react": "^1.0.0"
     },
     "devDependencies": {
