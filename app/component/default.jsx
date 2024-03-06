@@ -66,17 +66,17 @@ export default function DefaultLayout ({ children }) {
     }
     useEffect(() => {
 
-        active_link();
-        setTimeout(() => { setLoader(false); }, 800);
-        dispatch(toggle_user(get_session('user')));
-
-        if (window.innerWidth < 1024 && config.side) dispatch(toggle_side());
         if ( started ) { setAnimation(false); setTimeout(_ => setAnimation(config.animation)); }
         else setStarted(true);
 
+        active_user();
+        active_link();
+        setTimeout(() => { setLoader(false); }, 500);
+        dispatch(toggle_user(get_session('user')));
+
+        if (window.innerWidth < 1024 && config.side) dispatch(toggle_side());
         if ( !get_session('user')?.token ) return router.replace('/auth/login');
         if ( get_session('user')?.token && !get_session('user')?.active ) return router.replace('/auth/lock');
-        active_user();
 
     }, [pathname]);
     useEffect(() => {

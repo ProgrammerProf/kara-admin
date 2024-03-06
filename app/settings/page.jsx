@@ -18,7 +18,6 @@ export default function Settings () {
     const get_data = async() => {
 
         const response = await api('setting', {token: config.user.token});
-
         setData(response.settings || {});
         setPayments(response.payments || [{}, {}]);
 
