@@ -422,7 +422,7 @@ export default function Header ({ auth }) {
                         }
                         <li className="nav-item relative">
 
-                            <Link href="/account" className="nav-link">
+                            <Link href="/setting" className="nav-link">
 
                                 <div className="flex items-center">
 

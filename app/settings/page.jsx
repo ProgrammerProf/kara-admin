@@ -1,100 +1,75 @@
 "use client";
-import { toggle_user } from '@/public/script/store';
-import { api, alert_msg, file_info, date, host, fix_date, print } from '@/public/script/public';
-import { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { api, alert_msg, capitalize, print } from '@/public/script/public';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Loader from '@/app/component/loader';
-import Activity from './activity';
 
-export default function Account () {
+export default function Settings () {
 
     const config = useSelector((state) => state.config);
-    const dispatch = useDispatch();
-    const input = useRef();
     const [tab, setTab] = useState(0);
-    const [data, setData] = useState(config.user);
-    const [activity, setActivity] = useState([]);
+    const [data, setData] = useState({});
+    const [payments, setPayments] = useState([{}, {}]);
     const [loader, setLoader] = useState(false);
-    const [image, setImage] = useState('');
+    const [loader1, setLoader1] = useState(false);
+    const [loader2, setLoader2] = useState(false);
+    const [loader3, setLoader3] = useState(false);
 
     const get_data = async() => {
 
-        const response = await api('account', {token: config.user.token});
-        if ( !response.user ) return;
-
-        let _user_ = {...response.user, active: true, update: date()};
-        setData(_user_);
-        setActivity(response.activity || []);
-        dispatch(toggle_user(_user_));
-        
-    }
-    const save_data = async(e) => {
-
-        e.preventDefault();
-        setLoader(true);
-        const response = await api('account/save', {...data, token: config.user.token});
-        setLoader(false);
-
-        if ( response.status === true ) {
-            alert_msg('Your account Updated successfully');
-            let user = {...response.user, active: true, update: date()};
-            setData(user);
-            dispatch(toggle_user(user));
-            setTab(0);
-        }
-        else if ( response.status === 'exists' ) alert_msg('Sorry, this e-mail is already exists !', 'error');
-        else alert_msg('Sorry, something is went wrong !', 'error');
+        const response = await api('setting', {token: config.user.token});
+        setData(response.settings || {});
+        setPayments(response.payments || [{}, {}]);
 
     }
-    const change_password = async(e) => {
-
-        e.preventDefault();
-        if ( data.new_password !== data.new_password1 )
-            return alert_msg('The new password is not equal to confirm password !', 'error');
-        if ( data.new_password === data.old_password )
-            return alert_msg('The new password is equal to old password !', 'error');
+    const save_data = async() => {
 
         setLoader(true);
-        const response = await api('account/password', {...data, token: config.user.token});
+        const response = await api('setting/save', {...data, token: config.user.token});
+        if ( response.status ) alert_msg('System has been modified successfully');
+        else alert_msg('Error, something is went wrong !', 'error');
         setLoader(false);
 
-        if ( response.status === true ) {
-            alert_msg('Your password changed successfully');
-            setData({...data, old_password: '', new_password: '', new_password1: ''});
-            setTab(0);
-        }
-        else if ( response.status === 'not_match' ) alert_msg('Your old password is not correct !', 'error');
-        else alert_msg('Sorry, something is went wrong !', 'error');
+    }
+    const save_config = async( _data_ ) => {
+
+        setData(_data_);
+        setLoader1(true);
+        const response = await api('setting/option', {..._data_, token: config.user.token});
+        if ( response.status ) alert_msg('System has been modified successfully');
+        else alert_msg('Error, something is went wrong !', 'error');
+        setLoader1(false);
 
     }
-    const change_image = ( e ) => {
+    const save_payment = async( index ) => {
 
-        let f = e.target.files[0];
-        if ( !f) return;
-        var fr = new FileReader();
-        fr.readAsDataURL(f);
+        setLoader2(true);
+        const response = await api('setting/payment', {...payments[index], token: config.user.token});
+        if ( response.status ) alert_msg('Payments has been saved successfully');
+        else alert_msg('Error, something is went wrong !', 'error');
+        setLoader2(false);
 
-        fr.onload = () => {
-            
-            let type = file_info(f, 'type');
-            if ( type !== 'image') return alert_msg('Invalid file format, Image Required !', 'error');
-            setData({...data, file: f});
-            setImage(fr.result);
-        
-        }
+    }
+    const delete_item = async( item ) => {
+
+        if ( !confirm(`Are you sure to delete ${capitalize(item)} from system ?`) ) return;
+        setLoader3(true);
+        const response = await api('setting/delete', {item: item, token: config.user.token});
+        if ( response.status ) alert_msg(`${capitalize(item)} has been deleted successfully`);
+        else alert_msg('Error, something is went wrong !', 'error');
+        setLoader3(false);
 
     }
     useEffect(() => {
         
-        document.title = "Account";
-        setImage(`${host}/U${data.id}`);
+        document.title = "Settings";
         get_data();
 
     }, []);
 
     return (
 
-        <div className='relative min-h-[30rem] mt-[-.5rem]'>
+        <div className='settings relative h-full mt-[-.5rem]'>
 
             <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto no-select">
 
@@ -105,32 +80,34 @@ export default function Account () {
                             <path d="M22 12C22 12 21.0071 12.8907 19.0212 13.6851L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L4.97883 13.6851C2.99294 12.8907 2 12 2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                             <path d="M22 16C22 16 21.0071 16.8907 19.0212 17.6851L16.2127 18.8085C14.2268 19.6028 13.2339 20 12 20C10.7661 20 9.77318 19.6028 7.7873 18.8085L4.97883 17.6851C2.99294 16.8907 2 16 2 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                         </svg>
-                        <span>Details</span>
-                    </a>
-                </li>
-                <li className="inline-block">
-                    <a onClick={() => setTab(2)} className={`set-text pointer flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tab === 2 && '!border-primary text-primary'}`}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mt-[1px]">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"></circle>
-                            <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5"></circle>
-                            <path opacity="0.5" d="M15 9L19 5" stroke="currentColor" strokeWidth="1.5"></path>
-                            <path opacity="0.5" d="M5 19L9 15" stroke="currentColor" strokeWidth="1.5"></path>
-                            <path opacity="0.5" d="M9 9L5 5" stroke="currentColor" strokeWidth="1.5"></path>
-                            <path opacity="0.5" d="M19 19L15 15" stroke="currentColor" strokeWidth="1.5"></path>
-                        </svg>
-                        <span>Activity logs</span>
+                        <span>Information</span>
                     </a>
                 </li>
                 <li className="inline-block">
                     <a onClick={() => setTab(1)} className={`set-text pointer flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tab === 1 && '!border-primary text-primary'}`}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 mt-[.3px]">
-                            <path opacity="0.5" d="M2 16C2 13.1716 2 11.7574 2.87868 10.8787C3.75736 10 5.17157 10 8 10H16C18.8284 10 20.2426 10 21.1213 10.8787C22 11.7574 22 13.1716 22 16C22 18.8284 22 20.2426 21.1213 21.1213C20.2426 22 18.8284 22 16 22H8C5.17157 22 3.75736 22 2.87868 21.1213C2 20.2426 2 18.8284 2 16Z" fill="currentColor"></path>
-                            <path d="M8 17C8.55228 17 9 16.5523 9 16C9 15.4477 8.55228 15 8 15C7.44772 15 7 15.4477 7 16C7 16.5523 7.44772 17 8 17Z" fill="currentColor"></path>
-                            <path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="currentColor"></path>
-                            <path d="M17 16C17 16.5523 16.5523 17 16 17C15.4477 17 15 16.5523 15 16C15 15.4477 15.4477 15 16 15C16.5523 15 17 15.4477 17 16Z" fill="currentColor"></path>
-                            <path d="M6.75 8C6.75 5.10051 9.10051 2.75 12 2.75C14.8995 2.75 17.25 5.10051 17.25 8V10.0036C17.8174 10.0089 18.3135 10.022 18.75 10.0546V8C18.75 4.27208 15.7279 1.25 12 1.25C8.27208 1.25 5.25 4.27208 5.25 8V10.0546C5.68651 10.022 6.18264 10.0089 6.75 10.0036V8Z" fill="currentColor"></path>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mt-[1px]">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5"></circle>
+                            <path  d="M13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74457 2.35523 9.35522 2.74458 9.15223 3.23463C9.05957 3.45834 9.0233 3.7185 9.00911 4.09799C8.98826 4.65568 8.70226 5.17189 8.21894 5.45093C7.73564 5.72996 7.14559 5.71954 6.65219 5.45876C6.31645 5.2813 6.07301 5.18262 5.83294 5.15102C5.30704 5.08178 4.77518 5.22429 4.35436 5.5472C4.03874 5.78938 3.80577 6.1929 3.33983 6.99993C2.87389 7.80697 2.64092 8.21048 2.58899 8.60491C2.51976 9.1308 2.66227 9.66266 2.98518 10.0835C3.13256 10.2756 3.3397 10.437 3.66119 10.639C4.1338 10.936 4.43789 11.4419 4.43786 12C4.43783 12.5581 4.13375 13.0639 3.66118 13.3608C3.33965 13.5629 3.13248 13.7244 2.98508 13.9165C2.66217 14.3373 2.51966 14.8691 2.5889 15.395C2.64082 15.7894 2.87379 16.193 3.33973 17C3.80568 17.807 4.03865 18.2106 4.35426 18.4527C4.77508 18.7756 5.30694 18.9181 5.83284 18.8489C6.07289 18.8173 6.31632 18.7186 6.65204 18.5412C7.14547 18.2804 7.73556 18.27 8.2189 18.549C8.70224 18.8281 8.98826 19.3443 9.00911 19.9021C9.02331 20.2815 9.05957 20.5417 9.15223 20.7654C9.35522 21.2554 9.74457 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8477 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.902C15.0117 19.3443 15.2977 18.8281 15.781 18.549C16.2643 18.2699 16.8544 18.2804 17.3479 18.5412C17.6836 18.7186 17.927 18.8172 18.167 18.8488C18.6929 18.9181 19.2248 18.7756 19.6456 18.4527C19.9612 18.2105 20.1942 17.807 20.6601 16.9999C21.1261 16.1929 21.3591 15.7894 21.411 15.395C21.4802 14.8691 21.3377 14.3372 21.0148 13.9164C20.8674 13.7243 20.6602 13.5628 20.3387 13.3608C19.8662 13.0639 19.5621 12.558 19.5621 11.9999C19.5621 11.4418 19.8662 10.9361 20.3387 10.6392C20.6603 10.4371 20.8675 10.2757 21.0149 10.0835C21.3378 9.66273 21.4803 9.13087 21.4111 8.60497C21.3592 8.21055 21.1262 7.80703 20.6602 7C20.1943 6.19297 19.9613 5.78945 19.6457 5.54727C19.2249 5.22436 18.693 5.08185 18.1671 5.15109C17.9271 5.18269 17.6837 5.28136 17.3479 5.4588C16.8545 5.71959 16.2644 5.73002 15.7811 5.45096C15.2977 5.17191 15.0117 4.65566 14.9909 4.09794C14.9767 3.71848 14.9404 3.45833 14.8477 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224Z" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg>
-                        <span>Passwords</span>
+                        <span>Configrations</span>
+                    </a>
+                </li>
+                <li className="inline-block">
+                    <a onClick={() => setTab(2)} className={`set-text pointer flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tab === 2 && '!border-primary text-primary'}`}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 mt-[.3px]">
+                            <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+                            <path d="M12 6V18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                            <path d="M15 9.5C15 8.11929 13.6569 7 12 7C10.3431 7 9 8.11929 9 9.5C9 10.8807 10.3431 12 12 12C13.6569 12 15 13.1193 15 14.5C15 15.8807 13.6569 17 12 17C10.3431 17 9 15.8807 9 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                        </svg>
+                        <span>Payment Details</span>
+                    </a>
+                </li>
+                <li className="inline-block">
+                    <a onClick={() => setTab(3)} className={`set-text pointer flex gap-2 p-4 border-b border-transparent hover:border-primary hover:text-primary ${tab === 3 && '!border-primary text-primary'}`}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5 mt-[1px]">
+                            <path d="M4.00655 7.93309C3.93421 9.84122 4.41713 13.0817 7.6677 16.3323C8.45191 17.1165 9.23553 17.7396 10 18.2327M5.53781 4.93723C6.93076 3.54428 9.15317 3.73144 10.0376 5.31617L10.6866 6.4791C11.2723 7.52858 11.0372 8.90532 10.1147 9.8278C10.1147 9.8278 10.1147 9.8278 10.1147 9.8278C10.1146 9.82792 8.99588 10.9468 11.0245 12.9755C13.0525 15.0035 14.1714 13.8861 14.1722 13.8853C14.1722 13.8853 14.1722 13.8853 14.1722 13.8853C15.0947 12.9628 16.4714 12.7277 17.5209 13.3134L18.6838 13.9624C20.2686 14.8468 20.4557 17.0692 19.0628 18.4622C18.2258 19.2992 17.2004 19.9505 16.0669 19.9934C15.2529 20.0243 14.1963 19.9541 13 19.6111" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
+                        </svg>
+                        <span>Danger Zone</span>
                     </a>
                 </li>
 
@@ -138,189 +115,596 @@ export default function Account () {
 
             <div className='relative w-full'>
                 {
-                    tab === 0 ?
-                    <div className="profile flex justify-between items-start flex-wrap">
+                    tab === 1 ?
+                    <div className="relative switch">
 
-                        <div className="panel w-[27%]">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
 
-                            <h5 className="font-semibold text-lg mb-5 no-select">Profile</h5>
+                            <div className="panel space-y-4 no-select">
 
-                            <div className="rounded-full relative edit-item-info">
+                                <h5 className="font-semibold text-lg">Theme</h5>
 
-                                <img 
-                                    src={image || '/media/public/user_icon.png'} 
-                                    onError={(e) => e.target.src = "/media/public/user_icon.png"} 
-                                    onLoad={(e) => e.target.src.includes('_icon') ? e.target.classList.add('empty') : e.target.classList.remove('empty')}
-                                    className="banner-image rounded-full object-cover"
-                                />
+                                <div className="flex justify-around">
 
-                                <div className="add-img-btn flex pointer absolute rounded-full" onClick={() => input.current?.click()}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-5 w-5">
-                                        <path opacity="0.5" d="M4 22H20" stroke="#ddd" strokeWidth="1.5" strokeLinecap="round"></path>
-                                        <path d="M14.6296 2.92142L13.8881 3.66293L7.07106 10.4799C6.60933 10.9416 6.37846 11.1725 6.17992 11.4271C5.94571 11.7273 5.74491 12.0522 5.58107 12.396C5.44219 12.6874 5.33894 12.9972 5.13245 13.6167L4.25745 16.2417L4.04356 16.8833C3.94194 17.1882 4.02128 17.5243 4.2485 17.7515C4.47573 17.9787 4.81182 18.0581 5.11667 17.9564L5.75834 17.7426L8.38334 16.8675L8.3834 16.8675C9.00284 16.6611 9.31256 16.5578 9.60398 16.4189C9.94775 16.2551 10.2727 16.0543 10.5729 15.8201C10.8275 15.6215 11.0583 15.3907 11.5201 14.929L11.5201 14.9289L18.3371 8.11195L19.0786 7.37044C20.3071 6.14188 20.3071 4.14999 19.0786 2.92142C17.85 1.69286 15.8581 1.69286 14.6296 2.92142Z" stroke="#ddd" strokeWidth="1.5"></path>
-                                        <path opacity="0.5" d="M13.8879 3.66406C13.8879 3.66406 13.9806 5.23976 15.3709 6.63008C16.7613 8.0204 18.337 8.11308 18.337 8.11308M5.75821 17.7437L4.25732 16.2428" stroke="#ddd" strokeWidth="1.5"></path>
-                                    </svg>
+                                    <label className="inline-flex cursor-pointer">
+                                        <input type="radio" checked={data.theme === 'light'} onChange={() => save_config({...data, theme: 'light'})} name="flexRadioDefault" className="form-radio ltr:mr-4 rtl:ml-4 cursor-pointer"/>
+                                        <img className="ms-3" width="100" height="68" alt="settings-dark" src="/media/public/settings-light.svg" />
+                                    </label>
+
+                                    <label className="inline-flex cursor-pointer">
+                                        <input  type="radio" checked={data.theme === 'dark'} onChange={() => save_config({...data, theme: 'dark'})} name="flexRadioDefault" className="form-radio ltr:mr-4 rtl:ml-4 cursor-pointer"/>
+                                        <img className="ms-3" width="100" height="68" alt="settings-light" src="/media/public/settings-dark.svg" />
+                                    </label>
+
                                 </div>
-
-                                <input type="file" ref={input} onChange={change_image} className="hidden"/>
 
                             </div>
 
-                            <p className="text-center text-[1.3rem] tracking-wide default">Coding Master</p>
+                            <div className="panel space-y-4 no-select">
 
-                            <ul className="mt-6 flex flex-col space-y-4 font-semibold mb-[2.9rem]">
+                                <h5 className="font-semibold text-lg">Active Data</h5>
 
-                                <div className="h-px w-full border-b border-[#e0e6ed] dark:border-[#1b2e4b] mb-2"></div>
+                                <p className='pb-1'>
+                                    Download all active data from <span className="text-primary">system</span> in files.
+                                </p>
 
-                                <li className="flex gap-5 pt-[.7rem] default">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white-dark">
-                                        <path d="M24 5C24 6.65685 22.6569 8 21 8C19.3431 8 18 6.65685 18 5C18 3.34315 19.3431 2 21 2C22.6569 2 24 3.34315 24 5Z" fill="currentColor"></path>
-                                        <path d="M17.2339 7.46394L15.6973 8.74444C14.671 9.59966 13.9585 10.1915 13.357 10.5784C12.7747 10.9529 12.3798 11.0786 12.0002 11.0786C11.6206 11.0786 11.2258 10.9529 10.6435 10.5784C10.0419 10.1915 9.32941 9.59966 8.30315 8.74444L5.92837 6.76546C5.57834 6.47377 5.05812 6.52106 4.76643 6.87109C4.47474 7.22112 4.52204 7.74133 4.87206 8.03302L7.28821 10.0465C8.2632 10.859 9.05344 11.5176 9.75091 11.9661C10.4775 12.4334 11.185 12.7286 12.0002 12.7286C12.8154 12.7286 13.523 12.4334 14.2495 11.9661C14.947 11.5176 15.7372 10.859 16.7122 10.0465L18.3785 8.65795C17.9274 8.33414 17.5388 7.92898 17.2339 7.46394Z" fill="currentColor"></path>
-                                        <path d="M18.4538 6.58719C18.7362 6.53653 19.0372 6.63487 19.234 6.87109C19.3965 7.06614 19.4538 7.31403 19.4121 7.54579C19.0244 7.30344 18.696 6.97499 18.4538 6.58719Z" fill="currentColor"></path>
-                                        <path opacity="0.5" d="M16.9576 3.02099C16.156 3 15.2437 3 14.2 3H9.8C5.65164 3 3.57746 3 2.28873 4.31802C1 5.63604 1 7.75736 1 12C1 16.2426 1 18.364 2.28873 19.682C3.57746 21 5.65164 21 9.8 21H14.2C18.3484 21 20.4225 21 21.7113 19.682C23 18.364 23 16.2426 23 12C23 10.9326 23 9.99953 22.9795 9.1797C22.3821 9.47943 21.7103 9.64773 21 9.64773C18.5147 9.64773 16.5 7.58722 16.5 5.04545C16.5 4.31904 16.6646 3.63193 16.9576 3.02099Z" fill="currentColor"></path>
-                                    </svg>
-                                    <span className='text-[.95rem]'>{config.user.email}</span>
-                                </li>
-                                <li className="flex gap-5 pt-[.3rem] default">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white-dark">
-                                        <path d="M16.1007 13.359L16.5562 12.9062C17.1858 12.2801 18.1672 12.1515 18.9728 12.5894L20.8833 13.628C22.1102 14.2949 22.3806 15.9295 21.4217 16.883L20.0011 18.2954C19.6399 18.6546 19.1917 18.9171 18.6763 18.9651M4.00289 5.74561C3.96765 5.12559 4.25823 4.56668 4.69185 4.13552L6.26145 2.57483C7.13596 1.70529 8.61028 1.83992 9.37326 2.85908L10.6342 4.54348C11.2507 5.36691 11.1841 6.49484 10.4775 7.19738L10.1907 7.48257" stroke="currentColor" strokeWidth="1.5" />
-                                        <path opacity="0.5" d="M18.6763 18.9651C17.0469 19.117 13.0622 18.9492 8.8154 14.7266C4.81076 10.7447 4.09308 7.33182 4.00293 5.74561" stroke="currentColor" strokeWidth="1.5" />
-                                        <path opacity="0.5" d="M16.1007 13.3589C16.1007 13.3589 15.0181 14.4353 12.0631 11.4971C9.10807 8.55886 10.1907 7.48242 10.1907 7.48242" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                    </svg>
-                                    <span>{config.user.phone}</span>
-                                </li>
-                                <li className="flex gap-5 pt-[.3rem] default">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white-dark">
-                                        <path opacity="0.5" d="M19.7165 20.3624C21.143 19.5846 22 18.5873 22 17.5C22 16.3475 21.0372 15.2961 19.4537 14.5C17.6226 13.5794 14.9617 13 12 13C9.03833 13 6.37738 13.5794 4.54631 14.5C2.96285 15.2961 2 16.3475 2 17.5C2 18.6525 2.96285 19.7039 4.54631 20.5C6.37738 21.4206 9.03833 22 12 22C15.1066 22 17.8823 21.3625 19.7165 20.3624Z" fill="currentColor"></path>
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M5 8.51464C5 4.9167 8.13401 2 12 2C15.866 2 19 4.9167 19 8.51464C19 12.0844 16.7658 16.2499 13.2801 17.7396C12.4675 18.0868 11.5325 18.0868 10.7199 17.7396C7.23416 16.2499 5 12.0844 5 8.51464ZM12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" fill="currentColor"></path>
-                                    </svg>
-                                    <span>{config.user.ip}</span>
-                                </li>
-                                <li className="flex gap-5 pt-[.3rem] default">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white-dark">
-                                        <path opacity="0.5" d="M19.7165 20.3624C21.143 19.5846 22 18.5873 22 17.5C22 16.3475 21.0372 15.2961 19.4537 14.5C17.6226 13.5794 14.9617 13 12 13C9.03833 13 6.37738 13.5794 4.54631 14.5C2.96285 15.2961 2 16.3475 2 17.5C2 18.6525 2.96285 19.7039 4.54631 20.5C6.37738 21.4206 9.03833 22 12 22C15.1066 22 17.8823 21.3625 19.7165 20.3624Z" fill="currentColor"></path>
-                                        <path fillRule="evenodd" clipRule="evenodd" d="M5 8.51464C5 4.9167 8.13401 2 12 2C15.866 2 19 4.9167 19 8.51464C19 12.0844 16.7658 16.2499 13.2801 17.7396C12.4675 18.0868 11.5325 18.0868 10.7199 17.7396C7.23416 16.2499 5 12.0844 5 8.51464ZM12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" fill="currentColor"></path>
-                                    </svg>
-                                    <span>{config.user.host}</span>
-                                </li>
-                                <li className="flex gap-5 pt-[.49rem] default">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white-dark">
-                                        <path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z" fill="currentColor"></path>
-                                        <path opacity="0.5" d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z" fill="currentColor"></path>
-                                    </svg>
-                                    <span>{fix_date(config.user.create_date)}</span>
-                                </li>
+                                <button type="button" className="btn btn-primary download-data">Download</button>
 
-                            </ul>
+                            </div>
 
                         </div>
 
-                        <div className="panel lg:col-span-2 xl:col-span-3 w-[71.5%]">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-                            <h5 className="mb-7 font-semibold text-lg no-select">General Information</h5>
+                            <div className="panel space-y-4 default">
 
-                            <form className="mb-2 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 pr-3" onSubmit={save_data}>
+                                <h5 className="font-semibold text-lg">Mail System</h5>
+
+                                <p className='pb-1'>By activating this option you allow admins & owners & guest to use mail system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.mails || false} onChange={() => save_config({...data, mails: !data.mails})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Chat System</h5>
+
+                                <p className='pb-1'>By activating this option you allow admins & owners & guest to use chat system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.chats || false} onChange={() => save_config({...data, chats: !data.chats})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Notification System</h5>
+
+                                <p className='pb-1'>By activating this option you allow admins & owners & guest to receive notifications on system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.notifications || false} onChange={() => save_config({...data, notifications: !data.notifications})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Admin Register</h5>
+
+                                <p className='pb-1'>By activating this option you allow new admins to sign up to the system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.admin_register || false} onChange={() => save_config({...data, admin_register: !data.admin_register})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Admin Login</h5>
+
+                                <p className='pb-1'>By activating this option you allow admins to log in to the system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.admin_login || false} onChange={() => save_config({...data, admin_login: !data.admin_login})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">User Register</h5>
+
+                                <p className='pb-1'>By activating this option you allow new owners & guests to sign up to the system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.user_register || false} onChange={() => save_config({...data, user_register: !data.user_register})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">User Login</h5>
+
+                                <p className='pb-1'>By activating this option you allow owners & guests to log in to the system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.user_login || false} onChange={() => save_config({...data, user_login: !data.user_login})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Add Categories</h5>
+
+                                <p className='pb-1'>By activating this option you allow admin & owners to create new categories on system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.add_categories || false} onChange={() => save_config({...data, add_categories: !data.add_categories})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Add Properties</h5>
+
+                                <p className='pb-1'>By activating this option you allow admin & owners to create new properties on system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.add_products || false} onChange={() => save_config({...data, add_products: !data.add_products})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Add Bookings</h5>
+
+                                <p className='pb-1'>By activating this option you allow admin & owners to create new bookings on system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.add_bookings || false} onChange={() => save_config({...data, add_bookings: !data.add_bookings})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Add Coupons</h5>
+
+                                <p className='pb-1'>By activating this option you allow admin & owners to create new coupons on system .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.add_coupons || false} onChange={() => save_config({...data, add_coupons: !data.add_coupons})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Allow Properties</h5>
+
+                                <p className='pb-1'>By activating this option you allow guests to see properties on app or website .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.allow_products || false} onChange={() => save_config({...data, allow_products: !data.allow_products})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Allow Bookings</h5>
+
+                                <p className='pb-1'>By activating this option you allow guests to make bookings on app or website .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.allow_bookings || false} onChange={() => save_config({...data, allow_bookings: !data.allow_bookings})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Allow Coupons</h5>
+
+                                <p className='pb-1'>By activating this option you allow guests to use coupons on app or website.</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.allow_coupons || false} onChange={() => save_config({...data, allow_coupons: !data.allow_coupons})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Allow Withdraws</h5>
+
+                                <p className='pb-1'>By activating this option you allow owners & guests to make withdraws on app or website .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.withdraws || false} onChange={() => save_config({...data, withdraws: !data.withdraws})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Allow Deposits</h5>
+
+                                <p className='pb-1'>By activating this option you allow owners & guests to make deposits on app or website.</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={data.deposits || false} onChange={() => save_config({...data, deposits: !data.deposits})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Close App</h5>
+
+                                <p className='pb-1'>By activating this option you will close system on guests and owners - maintenance page will appeare .</p>
+
+                                <label className="w-12 h-6 relative">
+                                    <input type="checkbox" checked={!data.running || false} onChange={() => save_config({...data, running: !data.running})} className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer"/>
+                                    <span htmlFor="custom_switch_checkbox1" className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary before:transition-all before:duration-300"></span>
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        { loader1 && <Loader bg/> }
+
+                    </div>
+                    : tab === 2 ?
+                    <div className='relative'>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                            <div className="panel">
+
+                                <div className="mb-8 no-select">
+
+                                    <h5 className="font-semibold text-lg mb-2 tracking-wide">Stripe</h5>
+
+                                    <p>
+                                        Changes to your <span className="text-primary">Stripe</span> information will take
+                                        effect starting with payment .
+                                    </p>
+
+                                </div>
+
+                                <div className="mb-5">
+
+                                    <div className="grid gap-5 md:grid-cols-2 mb-5">
+                                        <div>
+                                            <label htmlFor="name" className='mb-3'>Owner name</label>
+                                            <input id="name" type="text" value={payments[0].name || ''} onChange={(e) => setPayments([{...payments[0], name: e.target.value}, payments[1]])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="email" className='mb-3'>E-mail</label>
+                                            <input id="email" type="text" value={payments[0].email || ''} onChange={(e) => setPayments([{...payments[0], email: e.target.value}, payments[1]])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                    </div>
+
+                                    <div className='mb-5'>
+                                        <label htmlFor="secret" className='mb-3'>Secret Key</label>
+                                        <input id="secret" type="text" value={payments[0].secret || ''} onChange={(e) => setPayments([{...payments[0], secret: e.target.value}, payments[1]])} className="form-input" autoComplete="off"/>
+                                    </div>
+
+                                    <div className="grid gap-5 md:grid-cols-2 mb-5">
+                                        <div>
+                                            <label htmlFor="date" className='mb-3'>Expire Date</label>
+                                            <input id="date" type="date" value={payments[0].date || ''} onChange={(e) => setPayments([{...payments[0], date: e.target.value}, payments[1]])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="address" className='mb-3'>Address</label>
+                                            <input id="address" type="text" value={payments[0].address || ''} onChange={(e) => setPayments([{...payments[0], address: e.target.value}, payments[1]])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="h-px w-full border-b border-[#e0e6ed] dark:border-[#1b2e4b] mt-11 mb-6"></div>
+
+                                <div className='w-full flex justify-start no-select'>
+                                    <button onClick={() => save_payment(0)} className="btn btn-primary w-[8rem] text-[.9rem] tracking-wide py-[.6rem]">Save Pay</button>
+                                </div>
+                                
+                            </div>
+                            <div className="panel">
+
+                                <div className="mb-8 no-select">
+
+                                    <h5 className="font-semibold text-lg mb-2 tracking-wide">Kashire</h5>
+
+                                    <p>
+                                        Changes to your <span className="text-primary">Kashire</span> information will take
+                                        effect starting with payment .
+                                    </p>
+
+                                </div>
+
+                                <div className="mb-5">
+
+                                    <div className="grid gap-5 md:grid-cols-2 mb-5">
+                                        <div>
+                                            <label htmlFor="name1" className='mb-3'>Owner name</label>
+                                            <input id="name1" type="text" value={payments[1].name || ''} onChange={(e) => setPayments([payments[0], {...payments[1], name: e.target.value}])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="email1" className='mb-3'>E-mail</label>
+                                            <input id="email1" type="text" value={payments[1].email || ''} onChange={(e) => setPayments([payments[0], {...payments[1], email: e.target.value}])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                    </div>
+
+                                    <div className='mb-5'>
+                                        <label htmlFor="secret1" className='mb-3'>Secret Key</label>
+                                        <input id="secret1" type="text" value={payments[1].secret || ''} onChange={(e) => setPayments([payments[0], {...payments[1], secret: e.target.value}])} className="form-input" autoComplete="off"/>
+                                    </div>
+
+                                    <div className="grid gap-5 md:grid-cols-2 mb-5">
+                                        <div>
+                                            <label htmlFor="date1" className='mb-3'>Expire Date</label>
+                                            <input id="date1" type="date" value={payments[1].date || ''} onChange={(e) => setPayments([payments[0], {...payments[1], date: e.target.value}])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="address1" className='mb-3'>Address</label>
+                                            <input id="address1" type="text" value={payments[1].address || ''} onChange={(e) => setPayments([payments[0], {...payments[1], address: e.target.value}])} className="form-input" autoComplete="off"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="h-px w-full border-b border-[#e0e6ed] dark:border-[#1b2e4b] mt-11 mb-6"></div>
+
+                                <div className='w-full flex justify-start no-select'>
+                                    <button onClick={() => save_payment(1)} className="btn btn-primary w-[8rem] text-[.9rem] tracking-wide py-[.6rem]">Save Pay</button>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
+                        { loader2 && <Loader bg/> }
+
+                    </div>
+                    : tab === 3 ?
+                    <div className="relative switch">
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Mails</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('mails')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Chats</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('chats')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Reports</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('reports')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Categories</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('categories')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Properites</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('products')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Coupons</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('coupons')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Bookings</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('bookings')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Payouts</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('payouts')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Supervisors</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('supervisors')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Admins</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('admins')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Owners</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('owners')}>Delete</button>
+
+                            </div>
+                            <div className="panel space-y-4 default">
+
+                                <h5 className="font-semibold text-lg">Delete Guests</h5>
+
+                                <p className='pb-1'>
+                                    <span className="text-danger">Note :</span>
+                                    <span className='px-2'>By clicking this button you will delete all data from system forever !</span>
+                                </p>
+
+                                <button className="btn btn-danger no-select" onClick={() => delete_item('guests')}>Delete</button>
+
+                            </div>
+
+                        </div>
+
+                        { loader3 && <Loader bg/> }
+
+                    </div> :
+                    <div className="relative border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-2 bg-white dark:bg-[#0e1726]">
+
+                        <h6 className="text-lg font-bold mb-5 no-select">General Information</h6>
+
+                        <div className="flex flex-col sm:flex-row">
+
+                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 home-form">
 
                                 <div>
-                                    <label htmlFor="name" className="mb-3">Full Name</label>
-                                    <input id="name" type="text" value={data.name || ''} onChange={(e) => setData({...data, name: e.target.value})} className="form-input" autoComplete="off" required/>
+                                    <label htmlFor="name">Name</label>
+                                    <input id="name" type="text" value={data.name || ''} onChange={(e) => setData({...data, name: e.target.value})} className="form-input" autoComplete="off"/>
                                 </div>
                                 <div>
-                                    <label htmlFor="phone" className="mb-3">Phone</label>
-                                    <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input" autoComplete="off" required/>
-                                </div>
-                                <div>
-                                    <label htmlFor="email" className="mb-3">E-mail</label>
-                                    <input id="email" type="email" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input" autoComplete="off" required/>
+                                    <label htmlFor="phone">Phone</label>
+                                    <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input" autoComplete="off"/>
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="age" className="mb-3">Age</label>
-                                        <input id="age" type="number" min="0" value={data.age || 0} onChange={(e) => setData({...data, age: e.target.value})} className="form-input" autoComplete="off"/>
-                                    </div>
-                                    <div>
-                                        <label htmlFor="date" className="mb-3">Login Date</label>
-                                        <input id="date" type="text" value={fix_date(data.login_date)} readOnly className="form-input default"/>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4 md:grid-cols-2">
-                                    <div>
-                                        <label htmlFor="country" className="mb-3">Country</label>
-                                        <select id="country" value={data.country || 'su'} onChange={(e) => setData({...data, country: e.target.value})} className="form-select pointer">
-                                            <option value="su">Saudi Arabian</option>
-                                            <option value="eg">Egypt</option>
-                                            <option value="us">United state</option>
+                                        <label htmlFor="language">Language</label>
+                                        <select id="language" value={data.language || ''} onChange={(e) => setData({...data, language: e.target.value})} className="form-select flex-1 pointer">
+                                            <option value='' hidden>--</option>
+                                            <option value="ar">Arabic</option>
+                                            <option value="en">English</option>
+                                            <option value="fr">French</option>
                                             <option value="it">Italian</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="city" className="mb-3">City</label>
-                                        <select id="city" value={data.city || 'makka'} onChange={(e) => setData({...data, city: e.target.value})} className="form-select pointer">
-                                            <option value="makka">Makkah</option>
-                                            <option value="gadda">Gadda</option>
-                                            <option value="ryad">Ryiad</option>
-                                            <option value="benha">Benha</option>
-                                            <option value="cairo">Cairo</option>
-                                        </select>
+                                        <label htmlFor="location">Location</label>
+                                        <input id="location" type="text" value={data.location || ''} onChange={(e) => setData({...data, location: e.target.value})} className="form-input" autoComplete="off"/>
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="language" className="mb-3">Language</label>
-                                    <select id="language" value={data.language || 'ar'} onChange={(e) => setData({...data, language: e.target.value})} className="form-select pointer">
-                                        <option value="ar">Arabic</option>
-                                        <option value="en">English</option>
-                                        <option value="fr">French</option>
-                                        <option value="it">Italian</option>
-                                    </select>
+                                    <label htmlFor="email">E-mail</label>
+                                    <input id="email" type="text" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input" autoComplete="off"/>
                                 </div>
                                 <div>
-                                    <label htmlFor="ip" className="mb-3">IP - Device</label>
-                                    <input id="ip" type="text" value={`${data.ip} - ${data.host}`} readOnly className="form-input default"/>
+                                    <label htmlFor="facebook">Facebook</label>
+                                    <input id="facebook" type="text" value={data.facebook || ''} onChange={(e) => setData({...data, facebook: e.target.value})} className="form-input" autoComplete="off"/>
                                 </div>
-                                <div className="sm:col-span-2 flex justify-end">
-                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">Update</button>
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <label htmlFor="whatsapp">Whatsapp</label>
+                                        <input id="whatsapp" type="text" value={data.whatsapp || ''} onChange={(e) => setData({...data, whatsapp: e.target.value})} className="form-input" autoComplete="off"/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="telegram">Telegram</label>
+                                        <input id="telegram" type="text" value={data.telegram || ''} onChange={(e) => setData({...data, telegram: e.target.value})} className="form-input" autoComplete="off"/>
+                                    </div>
                                 </div>
-
-                            </form>
-
-                            { loader && <Loader /> }
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div>
+                                        <label htmlFor="youtube">Youtube</label>
+                                        <input id="youtube" type="text" value={data.youtube || ''} onChange={(e) => setData({...data, youtube: e.target.value})} className="form-input" autoComplete="off"/>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="twitter">Twitter</label>
+                                        <input id="twitter" type="text" value={data.twitter || ''} onChange={(e) => setData({...data, twitter: e.target.value})} className="form-input" autoComplete="off"/>
+                                    </div>
+                                </div>
+                                <div className="sm:col-span-2 mt-0 mb-3 buttons-actions flex justify-end">
+                                    <button type="button" onClick={save_data} className="btn btn-primary save-data w-[8rem] tracking-wide text-[.9rem]">Save</button>
+                                </div>
+                                
+                            </div>
 
                         </div>
+
+                        { loader && <Loader /> }
 
                     </div>
-                    : tab === 1 ?
-                    <div className="profile flex justify-center items-center">
-
-                        <div className="panel lg:col-span-2 xl:col-span-3 mt-7 w-[40rem]">
-
-                            <h5 className="mb-7 font-semibold text-lg no-select">Change Password</h5>
-
-                            <form className="mb-2 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-5 pb-2" onSubmit={change_password}>
-
-                                <div className='mb-2'>
-                                    <label htmlFor="old_password" className="mb-3">Old Password</label>
-                                    <input id="old_password" type="password" value={data.old_password || ''} onChange={(e) => setData({...data, old_password: e.target.value})} className="form-input" autoComplete="off" required/>
-                                </div>
-                                <div className='mb-2'>
-                                    <label htmlFor="new_password" className="mb-3">New Password</label>
-                                    <input id="new_password" type="password" value={data.new_password || ''} onChange={(e) => setData({...data, new_password: e.target.value})} className="form-input" autoComplete="off" required/>
-                                </div>
-                                <div className='mb-2'>
-                                    <label htmlFor="new_password1" className="mb-3">Confirm password</label>
-                                    <input id="new_password1" type="password" value={data.new_password1 || ''} onChange={(e) => setData({...data, new_password1: e.target.value})} className="form-input" autoComplete="off" required/>
-                                </div>
-                                <div className="sm:col-span-2 flex justify-end mt-3">
-                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">Submit</button>
-                                </div>
-
-                            </form>
-
-                            { loader && <Loader /> }
-
-                        </div>
-
-                    </div> :
-                    <Activity activity={activity} setActivity={setActivity}/>
                 }
             </div>
 
