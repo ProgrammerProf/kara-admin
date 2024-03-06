@@ -360,7 +360,7 @@ export default function Header ({ auth }) {
 
                         <li className="nav-item relative">
 
-                            <Link href="/" className="nav-link" prefetch={false}>
+                            <Link href="/" className="nav-link">
 
                                 <div className="flex items-center">
 
@@ -380,7 +380,7 @@ export default function Header ({ auth }) {
                             config.user.mail &&
                             <li className="nav-item relative">
 
-                                <Link href="/mail" className="nav-link" prefetch={false}>
+                                <Link href="/mail" className="nav-link">
 
                                     <div className="flex items-center">
 
@@ -403,7 +403,7 @@ export default function Header ({ auth }) {
                             config.user.chat &&
                             <li className="nav-item relative">
 
-                                <Link href="/chat" className="nav-link" prefetch={false}>
+                                <Link href="/chat" className="nav-link">
 
                                     <div className="flex items-center">
 
@@ -422,7 +422,7 @@ export default function Header ({ auth }) {
                         }
                         <li className="nav-item relative">
 
-                            <Link href="/account" className="nav-link" prefetch={false}>
+                            <Link href="/account" className="nav-link">
 
                                 <div className="flex items-center">
 
@@ -444,7 +444,7 @@ export default function Header ({ auth }) {
                             config.user.super &&
                             <li className="nav-item relative">
 
-                                <Link href="/settings" className="nav-link" prefetch={false}>
+                                <Link href="/settings" className="nav-link">
 
                                     <div className="flex items-center">
 

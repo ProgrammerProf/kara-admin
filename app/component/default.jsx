@@ -67,7 +67,7 @@ export default function DefaultLayout ({ children }) {
     useEffect(() => {
 
         active_link();
-        setTimeout(() => { setLoader(false); }, 500);
+        setTimeout(() => { setLoader(false); }, 800);
         dispatch(toggle_user(get_session('user')));
 
         if (window.innerWidth < 1024 && config.side) dispatch(toggle_side());
@@ -84,6 +84,10 @@ export default function DefaultLayout ({ children }) {
         setAuth(get_session('user')?.token ? true : false);
         setActive((get_session('user')?.token && get_session('user')?.active) ? true : false);
         dispatch(toggle_user(get_session('user')));
+
+    }, [config.user.update])
+    useEffect(() => {
+
         dispatch(toggle_theme(localStorage.getItem('theme') || config.theme));
         dispatch(toggle_menu(localStorage.getItem('menu') || config.menu));
         dispatch(toggle_layout(localStorage.getItem('layout') || config.layout));
@@ -95,7 +99,7 @@ export default function DefaultLayout ({ children }) {
         setAnimation(config.animation);
         active_link();
 
-    }, [dispatch, config.theme, config.menu, config.layout, config.dir, config.animation, config.nav, config.lang, config.semidark, config.user.update]);
+    }, [dispatch, config.theme, config.menu, config.layout, config.dir, config.animation, config.nav, config.lang, config.semidark]);
 
     return (
 

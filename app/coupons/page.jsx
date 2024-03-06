@@ -145,7 +145,7 @@ export default function Coupons () {
                 columns={columns} data={data} delete_={delete_} search={search} async_search={false} 
                 no_delete={!data.length || !config.user.delete_coupons} no_search={!data.length} 
                 no_add={!config.user.add_coupons} no_edit={!config.user.see_coupons} btn_name="Add Coupon"
-                add={() => { setCoupon({}); setModel(true); setLoader(false); }} 
+                add={() => { setCoupon({active: true}); setModel(true); setLoader(false); }} 
                 edit={(id) => { setCoupon(data.find((_ => _.id === id))); setModel(true); setLoader(false); }} 
             />
 
