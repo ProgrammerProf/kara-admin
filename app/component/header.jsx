@@ -420,26 +420,29 @@ export default function Header ({ auth }) {
 
                             </li>
                         }
-                        <li className="nav-item relative">
+                        {
+                            config.user.id &&
+                            <li className="nav-item relative">
 
-                            <Link href="/setting" className="nav-link">
+                                <Link href="/account" className="nav-link">
 
-                                <div className="flex items-center">
+                                    <div className="flex items-center">
 
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"></circle>
-                                        <path stroke="currentColor" strokeWidth="1.5" d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 
-                                            12 13C16.4183 13 20 15.0147 20 17.5Z">
-                                        </path>
-                                    </svg>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5"></circle>
+                                            <path stroke="currentColor" strokeWidth="1.5" d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 
+                                                12 13C16.4183 13 20 15.0147 20 17.5Z">
+                                            </path>
+                                        </svg>
 
-                                    <span className="px-2">Account</span>
+                                        <span className="px-2">Account</span>
 
-                                </div>
+                                    </div>
 
-                            </Link>
+                                </Link>
 
-                        </li>
+                            </li>
+                        }
                         {
                             config.user.super &&
                             <li className="nav-item relative">
