@@ -19,7 +19,7 @@ export default function Account () {
 
     const get_data = async() => {
 
-        const response = await api('account', {token: config.user.token});
+        const response = await api('account', {token: get_session('user').token});
         if ( !response.user ) return;
 
         let _user_ = {...response.user, active: true, update: date()};
@@ -32,7 +32,7 @@ export default function Account () {
 
         e.preventDefault();
         setLoader(true);
-        const response = await api('account/save', {...data, token: config.user.token});
+        const response = await api('account/save', {...data, token: get_session('user').token});
         setLoader(false);
 
         if ( response.status === true ) {
@@ -55,7 +55,7 @@ export default function Account () {
             return alert_msg('The new password is equal to old password !', 'error');
 
         setLoader(true);
-        const response = await api('account/password', {...data, token: config.user.token});
+        const response = await api('account/password', {...data, token: get_session('user').token});
         setLoader(false);
 
         if ( response.status === true ) {
@@ -87,7 +87,8 @@ export default function Account () {
     useEffect(() => {
         
         document.title = "Account";
-        setImage(`${host}/U${data.id}`);
+        setData(get_session('user') || {});
+        setImage(`${host}/U${get_session('user').id}`);
         get_data();
 
     }, []);

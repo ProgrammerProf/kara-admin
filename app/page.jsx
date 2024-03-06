@@ -1,5 +1,5 @@
 "use client";
-import { alert_msg, api, fix_date, fix_number, host, print } from '@/public/script/public';
+import { alert_msg, api, fix_date, fix_number, get_session, host, print } from '@/public/script/public';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -26,7 +26,7 @@ export default function Home () {
 
     const get_data = async() => {
 
-        const response = await api('home/statistics', {token: config.user.token});
+        const response = await api('home/statistics', {token: get_session('user')?.token});
         
         setProperties(response.properties || {});
         setCoupons(response.coupons || {});
