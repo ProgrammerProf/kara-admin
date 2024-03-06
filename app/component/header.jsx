@@ -15,7 +15,7 @@ export default function Header ({ auth }) {
     const isRtl = config.dir === 'rtl' ? true : false;
     const [lang, setLang] = useState(config.lang);
 
-    const [messages, setMessages] = useState([
+    const [notifications, setNotifications] = useState([
         {
             id: 1,
             image: '<span class="grid place-content-center w-9 h-9 rounded-full bg-success-light dark:bg-success text-success dark:text-success-light"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span>',
@@ -45,31 +45,6 @@ export default function Header ({ auth }) {
             time: '5days',
         },
     ]);
-    const [notifications, setNotifications] = useState([
-        {
-            id: 1,
-            profile: 'user-profile.jpeg',
-            message: '<strong className="text-sm mr-1">John Doe</strong>invite you to <strong>Prototyping</strong>',
-            time: '45 min ago',
-        },
-        {
-            id: 2,
-            profile: 'profile-34.jpeg',
-            message: '<strong className="text-sm mr-1">Adam Nolan</strong>mentioned you to <strong>UX Basics</strong>',
-            time: '9h Ago',
-        },
-        {
-            id: 3,
-            profile: 'profile-16.jpeg',
-            message: '<strong className="text-sm mr-1">Anna Morgan</strong>Upload a file',
-            time: '9h Ago',
-        },
-    ]);
-    const removeMessage = (value) => {
-
-        setMessages(messages.filter((user) => user.id !== value));
-
-    };
     const removeNotification = (value) => {
 
         setNotifications(notifications.filter((user) => user.id !== value));
@@ -109,9 +84,7 @@ export default function Header ({ auth }) {
 
                         <div className="flex items-center space-x-1.5 ltr:ml-auto rtl:mr-auto rtl:space-x-reverse dark:text-[#d0d2d6] sm:flex-1 ltr:sm:ml-0 sm:rtl:mr-0 lg:space-x-2">
                             
-                            <div className="sm:ltr:mr-auto sm:rtl:ml-auto">
-                                
-                            </div>
+                            <div className="sm:ltr:mr-auto sm:rtl:ml-auto"></div>
                             <div>
 
                                 <button className='flex items-center rounded-full bg-white-light/40 p-2 hover:bg-white-light/90 hover:text-primary dark:bg-dark/40 dark:hover:bg-dark/60'
@@ -152,13 +125,19 @@ export default function Header ({ auth }) {
                             </div>
                             <div className="dropdown shrink-0">
 
-                                <Dropdown offset={[0, 8]} placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`} btnClassName="block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
+                                <Dropdown offset={[0, 8]} placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`} btnClassName="relative block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
                                     button={
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" d="M22 10C22.0185 10.7271 22 11.0542 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H13"/>
-                                            <path stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908"/>
-                                            <circle cx="19" cy="5" r="3" stroke="currentColor" strokeWidth="1.5" />
-                                        </svg>
+                                        <span>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke="currentColor" strokeWidth="1.5" d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z"/>
+                                                <path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                                <path d="M12 6V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                                            </svg>
+                                            <span className="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
+                                                <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
+                                                <span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
+                                            </span>
+                                        </span>
                                     }>
                                     
                                     <ul className="w-[300px] !py-0 text-xs text-dark dark:text-white-dark sm:w-[375px]">
@@ -176,25 +155,25 @@ export default function Header ({ auth }) {
                                         </li>
 
                                         {
-                                            messages.length > 0 ? 
+                                            notifications.length > 0 ? 
                                             <>
                                                 <li onClick={(e) => e.stopPropagation()}>
                                                     {
-                                                        messages.map((message) =>
+                                                        notifications.map((item) =>
 
-                                                            <div key={message.id} className="flex items-center py-3 px-5">
+                                                            <div key={item.id} className="flex items-center py-3 px-5 pointer hover:bg-primary/10">
 
-                                                                <div dangerouslySetInnerHTML={{__html: message.image}}></div>
+                                                                <div dangerouslySetInnerHTML={{__html: item.image}}></div>
                                                                 <span className="px-3 dark:text-gray-500">
-                                                                    <div className="text-sm font-semibold dark:text-white-light/90">{message.title}</div>
-                                                                    <div>{message.message}</div>
+                                                                    <div className="text-sm font-semibold dark:text-white-light/90">{item.title}</div>
+                                                                    <div>{item.message}</div>
                                                                 </span>
                                                                 <span className="whitespace-pre rounded bg-white-dark/20 px-1 font-semibold text-dark/60 ltr:ml-auto ltr:mr-2 rtl:mr-auto rtl:ml-2 dark:text-white-dark">
-                                                                    {message.time}
+                                                                    {item.time}
                                                                 </span>
-                                                                <button type="button" className="text-neutral-300 hover:text-danger" onClick={() => removeMessage(message.id)}>
+                                                                <button type="button" className="text-neutral-300 hover:text-danger" onClick={() => removeNotification(item.id)}>
                                                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                        <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+                                                                        <circle opacity="0.7" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
                                                                         <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                                                     </svg>
                                                                 </button>
@@ -208,7 +187,7 @@ export default function Header ({ auth }) {
 
                                                     <button type="button" className="group !h-[48px] justify-center !py-4 font-semibold text-primary dark:text-gray-400">
                                                         
-                                                        <span className="group-hover:underline ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
+                                                        <span className="ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
                                                         
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4 transition duration-300 group-hover:translate-x-1 ltr:ml-1 rtl:mr-1">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
@@ -220,7 +199,7 @@ export default function Header ({ auth }) {
                                             </> : 
                                             <li className="mb-5" onClick={(e) => e.stopPropagation()}>
                                                 
-                                                <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
+                                                <div className="default !grid min-h-[200px] place-content-center text-[.9rem] hover:!bg-transparent">
                                                     
                                                     <div className="mx-auto mb-4 rounded-full text-white ring-4 ring-primary/30">
                                                         <svg width="40" height="40" viewBox="0 0 24 24" fill="#a9abb6" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" className="feather feather-info rounded-full bg-primary">
@@ -231,114 +210,13 @@ export default function Header ({ auth }) {
 
                                                     No data available.
 
-                                                </button>
+                                                </div>
 
                                             </li>
                                         }
 
                                     </ul>
                                     
-                                </Dropdown>
-
-                            </div>
-                            <div className="dropdown shrink-0">
-
-                                <Dropdown offset={[0, 8]} placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`} btnClassName="relative block p-2 rounded-full bg-white-light/40 dark:bg-dark/40 hover:text-primary hover:bg-white-light/90 dark:hover:bg-dark/60"
-                                    button={
-                                        <span>
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path stroke="currentColor" strokeWidth="1.5" d="M19.0001 9.7041V9C19.0001 5.13401 15.8661 2 12.0001 2C8.13407 2 5.00006 5.13401 5.00006 9V9.7041C5.00006 10.5491 4.74995 11.3752 4.28123 12.0783L3.13263 13.8012C2.08349 15.3749 2.88442 17.5139 4.70913 18.0116C9.48258 19.3134 14.5175 19.3134 19.291 18.0116C21.1157 17.5139 21.9166 15.3749 20.8675 13.8012L19.7189 12.0783C19.2502 11.3752 19.0001 10.5491 19.0001 9.7041Z"/>
-                                                <path d="M7.5 19C8.15503 20.7478 9.92246 22 12 22C14.0775 22 15.845 20.7478 16.5 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                                <path d="M12 6V10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                            </svg>
-                                            <span className="absolute top-0 flex h-3 w-3 ltr:right-0 rtl:left-0">
-                                                <span className="absolute -top-[3px] inline-flex h-full w-full animate-ping rounded-full bg-success/50 opacity-75 ltr:-left-[3px] rtl:-right-[3px]"></span>
-                                                <span className="relative inline-flex h-[6px] w-[6px] rounded-full bg-success"></span>
-                                            </span>
-                                        </span>
-                                    }>
-
-                                    <ul className="w-[300px] divide-y !py-0 text-dark dark:divide-white/10 dark:text-white-dark sm:w-[350px]">
-
-                                        <li onClick={(e) => e.stopPropagation()}>
-
-                                            <div className="flex items-center justify-between px-4 py-2 font-semibold">
-
-                                                <h4 className="text-lg">Notification</h4>
-
-                                                {notifications.length ? <span className="badge bg-primary/80">{notifications.length}New</span> : ''}
-
-                                            </div>
-
-                                        </li>
-
-                                        {
-                                            notifications.length > 0 ?
-                                            <>
-                                                {
-                                                    notifications.map((notification) =>
-
-                                                        <li key={notification.id} className="dark:text-white-light/90" onClick={(e) => e.stopPropagation()}>
-                                                            
-                                                            <div className="group flex items-center px-4 py-2">
-
-                                                                <div className="grid place-content-center rounded">
-
-                                                                    <div className="relative h-12 w-12">
-                                                                        <img className="h-12 w-12 rounded-full object-cover" alt="profile" src={`/media/public/${notification.profile}`} />
-                                                                        <span className="absolute right-[6px] bottom-0 block h-2 w-2 rounded-full bg-success"></span>
-                                                                    </div>
-
-                                                                </div>
-
-                                                                <div className="flex flex-auto ltr:pl-3 rtl:pr-3">
-
-                                                                    <div className="ltr:pr-3 rtl:pl-3">
-                                                                        <h6 dangerouslySetInnerHTML={{__html: notification.message}}></h6>
-                                                                        <span className="block text-xs font-normal dark:text-gray-500">{notification.time}</span>
-                                                                    </div>
-
-                                                                    <button type="button" onClick={() => removeNotification(notification.id)} className="text-neutral-300 opacity-0 hover:text-danger group-hover:opacity-100 ltr:ml-auto rtl:mr-auto">
-                                                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-                                                                            <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                                                                        </svg>
-                                                                    </button>
-
-                                                                </div>
-
-                                                            </div>
-
-                                                        </li>
-
-                                                    )
-                                                }
-                                                <li>
-                                                    <div className="p-4">
-                                                        <button className="btn btn-primary btn-small block w-full">Read All Notifications</button>
-                                                    </div>
-                                                </li>
-                                            </> :
-                                            <li onClick={(e) => e.stopPropagation()}>
-
-                                                <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
-
-                                                    <div className="mx-auto mb-4 rounded-full ring-4 ring-primary/30">
-                                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="#a9abb6" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" className="feather feather-info rounded-full bg-primary">
-                                                            <line x1="12" y1="16" x2="12" y2="12"></line>
-                                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                                        </svg>
-                                                    </div>
-
-                                                    No data available.
-
-                                                </button>
-
-                                            </li>
-                                        }
-
-                                    </ul>
-
                                 </Dropdown>
 
                             </div>
@@ -482,7 +360,7 @@ export default function Header ({ auth }) {
 
                         <li className="nav-item relative">
 
-                            <Link href="/" className="nav-link">
+                            <Link href="/" className="nav-link" prefetch={false}>
 
                                 <div className="flex items-center">
 
@@ -502,7 +380,7 @@ export default function Header ({ auth }) {
                             config.user.mail &&
                             <li className="nav-item relative">
 
-                                <Link href="/mail" className="nav-link">
+                                <Link href="/mail" className="nav-link" prefetch={false}>
 
                                     <div className="flex items-center">
 
@@ -525,7 +403,7 @@ export default function Header ({ auth }) {
                             config.user.chat &&
                             <li className="nav-item relative">
 
-                                <Link href="/chat" className="nav-link">
+                                <Link href="/chat" className="nav-link" prefetch={false}>
 
                                     <div className="flex items-center">
 
@@ -544,7 +422,7 @@ export default function Header ({ auth }) {
                         }
                         <li className="nav-item relative">
 
-                            <Link href="/account" className="nav-link">
+                            <Link href="/account" className="nav-link" prefetch={false}>
 
                                 <div className="flex items-center">
 
@@ -566,7 +444,7 @@ export default function Header ({ auth }) {
                             config.user.super &&
                             <li className="nav-item relative">
 
-                                <Link href="/settings" className="nav-link">
+                                <Link href="/settings" className="nav-link" prefetch={false}>
 
                                     <div className="flex items-center">
 
