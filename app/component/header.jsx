@@ -442,7 +442,7 @@ export default function Header ({ auth }) {
                         </li>
                         <li className="nav-item relative">
 
-                            <Link href="/profile" className="nav-link">
+                            <Link href="/master" className="nav-link">
 
                                 <div className="flex items-center">
 
@@ -453,7 +453,7 @@ export default function Header ({ auth }) {
                                         </path>
                                     </svg>
 
-                                    <span className="px-2">Profile</span>
+                                    <span className="px-2">Master</span>
 
                                 </div>
 
