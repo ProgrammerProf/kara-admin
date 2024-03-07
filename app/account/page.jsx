@@ -106,7 +106,7 @@ export default function Account () {
                             <path d="M22 12C22 12 21.0071 12.8907 19.0212 13.6851L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L4.97883 13.6851C2.99294 12.8907 2 12 2 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                             <path d="M22 16C22 16 21.0071 16.8907 19.0212 17.6851L16.2127 18.8085C14.2268 19.6028 13.2339 20 12 20C10.7661 20 9.77318 19.6028 7.7873 18.8085L4.97883 17.6851C2.99294 16.8907 2 16 2 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                         </svg>
-                        <span>Details</span>
+                        <span>{config.text.details}</span>
                     </a>
                 </li>
                 <li className="inline-block">
@@ -119,7 +119,7 @@ export default function Account () {
                             <path opacity="0.5" d="M9 9L5 5" stroke="currentColor" strokeWidth="1.5"></path>
                             <path opacity="0.5" d="M19 19L15 15" stroke="currentColor" strokeWidth="1.5"></path>
                         </svg>
-                        <span>Activity logs</span>
+                        <span>{config.text.activity_logs}</span>
                     </a>
                 </li>
                 <li className="inline-block">
@@ -131,7 +131,7 @@ export default function Account () {
                             <path d="M17 16C17 16.5523 16.5523 17 16 17C15.4477 17 15 16.5523 15 16C15 15.4477 15.4477 15 16 15C16.5523 15 17 15.4477 17 16Z" fill="currentColor"></path>
                             <path d="M6.75 8C6.75 5.10051 9.10051 2.75 12 2.75C14.8995 2.75 17.25 5.10051 17.25 8V10.0036C17.8174 10.0089 18.3135 10.022 18.75 10.0546V8C18.75 4.27208 15.7279 1.25 12 1.25C8.27208 1.25 5.25 4.27208 5.25 8V10.0546C5.68651 10.022 6.18264 10.0089 6.75 10.0036V8Z" fill="currentColor"></path>
                         </svg>
-                        <span>Passwords</span>
+                        <span>{config.text.passwords}</span>
                     </a>
                 </li>
 

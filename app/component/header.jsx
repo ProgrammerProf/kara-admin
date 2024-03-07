@@ -75,7 +75,7 @@ export default function Header ({ auth }) {
                                 <img className="w-5 rtl:ml-3 ltr:mr-3 flex-none" src="/media/public/logo.svg"/>
 
                                 <span className="text-2xl font-semibold align-middle lg:inline dark:text-white-dark" style={{fontSize: "1.2rem", marginTop: "0"}}>
-                                    <span className='text-primary'>Kara</span> <span className='text-danger'>Admin</span>
+                                    <span className='text-primary'>{config.text.logo1}</span> <span className='text-danger'>{config.text.logo2}</span>
                                 </span>
 
                             </Link>
@@ -111,7 +111,7 @@ export default function Header ({ auth }) {
                                                     <button type="button" className={`flex w-full hover:text-primary ${lang === item.code ? 'bg-primary/10 text-primary' : ''}`}
                                                         onClick={() => { dispatch(toggle_lang(item.code)); setLang(item.code); }}>
                                                         <img src={`/media/public/flags/${item.code.toUpperCase()}.svg`} alt="flag" className="h-5 w-5 rounded-full object-cover" />
-                                                        <span className="ltr:ml-3 rtl:mr-3">{item.name}</span>
+                                                        <span className="ltr:ml-3 rtl:mr-3">{config.text[item.code]}</span>
                                                     </button>
 
                                                 </li>
@@ -148,7 +148,7 @@ export default function Header ({ auth }) {
                                                 
                                                 <div className="bg- absolute inset-0 h-full w-full bg-[url(/media/public/menu-heade.jpg)] bg-cover bg-center bg-no-repeat"></div>
                                                 
-                                                <h4 className="relative z-10 text-lg font-semibold">Messages</h4>
+                                                <h4 className="relative z-10 text-lg font-semibold">{config.text.notifications}</h4>
 
                                             </div>
 
@@ -187,9 +187,9 @@ export default function Header ({ auth }) {
 
                                                     <button type="button" className="group !h-[48px] justify-center !py-4 font-semibold text-primary dark:text-gray-400">
                                                         
-                                                        <span className="ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
+                                                        <span className="ltr:mr-1 rtl:ml-1 text-[.85rem]">{config.text.view_all_activities}</span>
                                                         
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4 transition duration-300 group-hover:translate-x-1 ltr:ml-1 rtl:mr-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4 transition duration-300 group-hover:translate-x-2 rtl:rotate-[180deg] rtl:group-hover:translate-x-[-10px] ltr:ml-1 rtl:mr-1">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                                                         </svg>
 
@@ -208,7 +208,7 @@ export default function Header ({ auth }) {
                                                         </svg>
                                                     </div>
 
-                                                    No data available.
+                                                    {config.text.no_data}
 
                                                 </div>
 
@@ -290,7 +290,7 @@ export default function Header ({ auth }) {
                                                     <path opacity="0.5" stroke="currentColor" strokeWidth="1.5" d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"/>
                                                 </svg>
 
-                                                Account
+                                                {config.text.account}
 
                                             </button>
 
@@ -306,7 +306,7 @@ export default function Header ({ auth }) {
                                                         <path stroke="currentColor" strokeWidth="1.5" d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908L18 8" strokeLinecap="round"/>
                                                     </svg>
 
-                                                    Mailbox
+                                                    {config.text.mail}
 
                                                 </button>
 
@@ -326,7 +326,7 @@ export default function Header ({ auth }) {
                                                     </g>
                                                 </svg>
 
-                                                Lock Screen
+                                                {config.text.lockscreen}
 
                                             </button>
 
@@ -340,7 +340,7 @@ export default function Header ({ auth }) {
                                                     <path d="M12 15L12 2M12 2L15 5.5M12 2L9 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                                 </svg>
 
-                                                Sign Out
+                                                {config.text.logout}
 
                                             </button>
 
@@ -371,7 +371,7 @@ export default function Header ({ auth }) {
                                             <path d="M21.446 7.06901C20.6342 5.00831 18.9917 3.36579 16.931 2.55398C15.3895 1.94669 14 3.34316 14 5.00002V9.00002C14 9.5523 14.4477 10 15 10H19C20.6569 10 22.0533 8.61055 21.446 7.06901Z" fill="currentColor"></path>
                                         </svg>
 
-                                        <span className="px-2">Dashboard</span>
+                                        <span className="px-2">{config.text.dashboard}</span>
 
                                     </div>
 
@@ -394,7 +394,7 @@ export default function Header ({ auth }) {
                                             <path opacity="0.5" d="M16.9576 3.02099C16.156 3 15.2437 3 14.2 3H9.8C5.65164 3 3.57746 3 2.28873 4.31802C1 5.63604 1 7.75736 1 12C1 16.2426 1 18.364 2.28873 19.682C3.57746 21 5.65164 21 9.8 21H14.2C18.3484 21 20.4225 21 21.7113 19.682C23 18.364 23 16.2426 23 12C23 10.9326 23 9.99953 22.9795 9.1797C22.3821 9.47943 21.7103 9.64773 21 9.64773C18.5147 9.64773 16.5 7.58722 16.5 5.04545C16.5 4.31904 16.6646 3.63193 16.9576 3.02099Z" fill="currentColor"></path>
                                         </svg>
 
-                                        <span className="px-2">Mailbox</span>
+                                        <span className="px-2">{config.text.mail}</span>
 
                                     </div>
 
@@ -415,7 +415,7 @@ export default function Header ({ auth }) {
                                             <path opacity="0.5" d="M15.486 1C16.7529 0.999992 17.7603 0.999986 18.5683 1.07681C19.3967 1.15558 20.0972 1.32069 20.7212 1.70307C21.3632 2.09648 21.9029 2.63623 22.2963 3.27821C22.6787 3.90219 22.8438 4.60265 22.9226 5.43112C22.9994 6.23907 22.9994 7.24658 22.9994 8.51343V9.37869C22.9994 10.2803 22.9994 10.9975 22.9597 11.579C22.9191 12.174 22.8344 12.6848 22.6362 13.1632C22.152 14.3323 21.2232 15.2611 20.0541 15.7453C20.0249 15.7574 19.9955 15.7691 19.966 15.7804C19.8249 15.8343 19.7039 15.8806 19.5978 15.915H17.9477C17.9639 15.416 17.9639 14.8217 17.9639 14.093V13.2448C17.9639 10.4683 17.9639 9.08006 17.3389 8.06023C16.9892 7.48958 16.5094 7.0098 15.9388 6.66011C14.919 6.03516 13.5307 6.03516 10.7542 6.03516H8.20964C7.22423 6.03516 6.41369 6.03516 5.73242 6.06309V4.4127C5.76513 4.29934 5.80995 4.16941 5.86255 4.0169C5.95202 3.75751 6.06509 3.51219 6.20848 3.27821C6.60188 2.63623 7.14163 2.09648 7.78361 1.70307C8.40759 1.32069 9.10805 1.15558 9.93651 1.07681C10.7445 0.999986 11.7519 0.999992 13.0188 1H15.486Z" fill="currentColor"></path>
                                         </svg>
 
-                                        <span className="px-2">Chat</span>
+                                        <span className="px-2">{config.text.chat}</span>
 
                                     </div>
 
@@ -438,7 +438,7 @@ export default function Header ({ auth }) {
                                             </path>
                                         </svg>
 
-                                        <span className="px-2">Account</span>
+                                        <span className="px-2">{config.text.account}</span>
 
                                     </div>
 
@@ -459,7 +459,7 @@ export default function Header ({ auth }) {
                                             <path d="M13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74457 2.35523 9.35522 2.74458 9.15223 3.23463C9.05957 3.45834 9.0233 3.7185 9.00911 4.09799C8.98826 4.65568 8.70226 5.17189 8.21894 5.45093C7.73564 5.72996 7.14559 5.71954 6.65219 5.45876C6.31645 5.2813 6.07301 5.18262 5.83294 5.15102C5.30704 5.08178 4.77518 5.22429 4.35436 5.5472C4.03874 5.78938 3.80577 6.1929 3.33983 6.99993C2.87389 7.80697 2.64092 8.21048 2.58899 8.60491C2.51976 9.1308 2.66227 9.66266 2.98518 10.0835C3.13256 10.2756 3.3397 10.437 3.66119 10.639C4.1338 10.936 4.43789 11.4419 4.43786 12C4.43783 12.5581 4.13375 13.0639 3.66118 13.3608C3.33965 13.5629 3.13248 13.7244 2.98508 13.9165C2.66217 14.3373 2.51966 14.8691 2.5889 15.395C2.64082 15.7894 2.87379 16.193 3.33973 17C3.80568 17.807 4.03865 18.2106 4.35426 18.4527C4.77508 18.7756 5.30694 18.9181 5.83284 18.8489C6.07289 18.8173 6.31632 18.7186 6.65204 18.5412C7.14547 18.2804 7.73556 18.27 8.2189 18.549C8.70224 18.8281 8.98826 19.3443 9.00911 19.9021C9.02331 20.2815 9.05957 20.5417 9.15223 20.7654C9.35522 21.2554 9.74457 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8477 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.902C15.0117 19.3443 15.2977 18.8281 15.781 18.549C16.2643 18.2699 16.8544 18.2804 17.3479 18.5412C17.6836 18.7186 17.927 18.8172 18.167 18.8488C18.6929 18.9181 19.2248 18.7756 19.6456 18.4527C19.9612 18.2105 20.1942 17.807 20.6601 16.9999C21.1261 16.1929 21.3591 15.7894 21.411 15.395C21.4802 14.8691 21.3377 14.3372 21.0148 13.9164C20.8674 13.7243 20.6602 13.5628 20.3387 13.3608C19.8662 13.0639 19.5621 12.558 19.5621 11.9999C19.5621 11.4418 19.8662 10.9361 20.3387 10.6392C20.6603 10.4371 20.8675 10.2757 21.0149 10.0835C21.3378 9.66273 21.4803 9.13087 21.4111 8.60497C21.3592 8.21055 21.1262 7.80703 20.6602 7C20.1943 6.19297 19.9613 5.78945 19.6457 5.54727C19.2249 5.22436 18.693 5.08185 18.1671 5.15109C17.9271 5.18269 17.6837 5.28136 17.3479 5.4588C16.8545 5.71959 16.2644 5.73002 15.7811 5.45096C15.2977 5.17191 15.0117 4.65566 14.9909 4.09794C14.9767 3.71848 14.9404 3.45833 14.8477 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224Z" stroke="currentColor" strokeWidth="1.5"></path>
                                         </svg>
 
-                                        <span className="px-2">Settings</span>
+                                        <span className="px-2">{config.text.settings}</span>
 
                                     </div>
 
@@ -486,7 +486,7 @@ export default function Header ({ auth }) {
                                             <path opacity="0.8" d="M4 19C2.24575 18.6153 1 17.6411 1 16.5C1 15.3589 2.24575 14.3847 4 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                         </svg>
 
-                                        <span className="px-2">Users</span>
+                                        <span className="px-2">{config.text.users}</span>
 
                                     </div>
 
@@ -500,9 +500,9 @@ export default function Header ({ auth }) {
 
                                 <ul className="sub-menu">
 
-                                    { config.user.supervisor && <li><Link href="/admins">Admins</Link></li> }
-                                    { config.user.see_owners && <li><Link href="/owners">Owners</Link></li> }
-                                    { config.user.see_guests && <li><Link href="/guests">Guests</Link></li> }
+                                    { config.user.supervisor && <li><Link href="/admins">{config.text.admins}</Link></li> }
+                                    { config.user.see_owners && <li><Link href="/owners">{config.text.owners}</Link></li> }
+                                    { config.user.see_guests && <li><Link href="/guests">{config.text.guests}</Link></li> }
                                     
                                 </ul>
 
@@ -533,7 +533,7 @@ export default function Header ({ auth }) {
                                             <path fill="currentColor" d="M13.3515 18.6485C13 18.2971 13 17.7314 13 16.6V15.4C13 14.2686 13 13.7029 13.3515 13.3515C13.7029 13 14.2686 13 15.4 13H16.6C17.7314 13 18.2971 13 18.6485 13.3515C19 13.7029 19 14.2686 19 15.4C19 17.097 19 17.9456 18.4728 18.4728C17.9456 19 17.0971 19 15.4 19C14.2687 19 13.7029 19 13.3515 18.6485Z"/>
                                         </svg>
 
-                                        <span className="px-2">Apps</span>
+                                        <span className="px-2">{config.text.apps}</span>
 
                                     </div>
 
@@ -547,16 +547,16 @@ export default function Header ({ auth }) {
 
                                 <ul className="sub-menu">
 
-                                    { config.user.see_categories && <li><Link href="/categories">Categories</Link></li> }
-                                    { config.user.see_products && <li><Link href="/properties">Properties</Link></li> }
+                                    { config.user.see_categories && <li><Link href="/categories">{config.text.categories}</Link></li> }
+                                    { config.user.see_products && <li><Link href="/properties">{config.text.products}</Link></li> }
                                     {
                                         config.user.see_categories || config.user.see_products ? 
                                         <hr className="border-[#e0e6ed] dark:border-primary my-2 opacity-[.5] dark:opacity-[.2] m-auto"/>
                                         : ''
                                     }
-                                    { config.user.see_bookings && <li><Link href="/bookings">bookings</Link></li> }
-                                    { config.user.see_coupons && <li><Link href="/coupons">Coupons</Link></li> }
-                                    { config.user.supervisor && <li><Link href="/reports">Reports</Link></li> }
+                                    { config.user.see_bookings && <li><Link href="/bookings">{config.text.bookings}</Link></li> }
+                                    { config.user.see_coupons && <li><Link href="/coupons">{config.text.coupons}</Link></li> }
+                                    { config.user.supervisor && <li><Link href="/reports">{config.text.reports}</Link></li> }
                                     
                                 </ul>
 
@@ -577,7 +577,7 @@ export default function Header ({ auth }) {
                                 <img className="w-5 rtl:ml-3 ltr:mr-3 flex-none" src="/media/public/logo.svg"/>
 
                                 <span className="text-2xl font-semibold align-middle lg:inline dark:text-white-dark" style={{fontSize: "1.2rem", marginTop: "0"}}>
-                                    <span className='text-primary'>Kara</span> <span className='text-danger'>Admin</span>
+                                    <span className='text-primary'>{config.text.logo1}</span> <span className='text-danger'>{config.text.logo2}</span>
                                 </span>
 
                             </Link>

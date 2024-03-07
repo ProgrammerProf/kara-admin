@@ -1,5 +1,5 @@
 "use client";
-import { toggle_dir, toggle_theme, toggle_lang, toggle_menu, toggle_layout, toggle_animation, toggle_nav, toggle_semidark, toggle_side, toggle_user } from '@/public/script/store';
+import { toggle_dir, toggle_theme, toggle_lang, toggle_menu, toggle_layout, toggle_animation, toggle_nav, toggle_semidark, toggle_side, toggle_user, toggle_text } from '@/public/script/store';
 import { api, date, get_session, print } from '@/public/script/public';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -84,7 +84,7 @@ export default function DefaultLayout ({ children }) {
         setActive((get_session('user')?.token && get_session('user')?.active) ? true : false);
         dispatch(toggle_user(get_session('user')));
 
-    }, [config.user.update])
+    }, [config.user.update]);
     useEffect(() => {
 
         dispatch(toggle_theme(localStorage.getItem('theme') || config.theme));
@@ -134,6 +134,8 @@ export default function DefaultLayout ({ children }) {
                 <div className="relative">
 
                     { loader && <Loader fixed bg/> }
+
+                    <Setting />
 
                     <div className={`${config.nav} main-container min-h-screen text-black dark:text-white-dark`}>
 
