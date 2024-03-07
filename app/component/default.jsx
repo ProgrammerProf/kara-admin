@@ -26,7 +26,7 @@ export default function DefaultLayout ({ children }) {
 
     const active_user = async() => {
         
-        const response = await api('auth/user', {token: get_session('user')?.token || ''});
+        const response = await api('auth/user', {token: get_session('user')?.token});
         if ( response.user?.token ) dispatch(toggle_user({...response.user, active: true, update: date()}));
         else dispatch(toggle_user({}));
 
@@ -66,17 +66,16 @@ export default function DefaultLayout ({ children }) {
     }
     useEffect(() => {
 
-        if ( started ) { setAnimation(false); setTimeout(_ => setAnimation(config.animation)); }
-        else setStarted(true);
-
-        active_user();
         active_link();
         setTimeout(() => { setLoader(false); }, 500);
         dispatch(toggle_user(get_session('user')));
+        if ( started ) { setAnimation(false); setTimeout(_ => setAnimation(config.animation)); }
+        else setStarted(true);
 
         if (window.innerWidth < 1024 && config.side) dispatch(toggle_side());
         if ( !get_session('user')?.token ) return router.replace('/auth/login');
         if ( get_session('user')?.token && !get_session('user')?.active ) return router.replace('/auth/lock');
+        active_user();
 
     }, [pathname]);
     useEffect(() => {
