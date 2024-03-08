@@ -31,39 +31,39 @@ export default function Form_Category ({ id }) {
         if ( !response.data?.id ) return router.replace('/categories');
         setData(response.data);
         setLoader(false);
-        document.title = `Edit Category | ${response.data.name || ''}`;
+        document.title = `${config.text.edit_category} | ${response.data.name || ''}`;
 
     }
     const save_item = async() => {
         
-        if ( !data.name ) return alert_msg('Error, category name required !', 'error');
+        if ( !data.name ) return alert_msg(config.text.name_required, 'error');
         setLoader(true);
         const response = await api(`category/${id ? 'edit' : 'add'}`, {...data, token: config.user.token});
 
         if ( response.status === true ) {
-            if ( id ) alert_msg(`Category ( ${id} ) updated successfully`);
-            else alert_msg(`New category added successfully`);
+            if ( id ) alert_msg(`${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`);
+            else alert_msg(config.text.new_item_added);
             return router.replace('/categories')
         }
-        else if ( response.status === 'exists' ) alert_msg('This category name is already exists !', 'error');
-        else alert_msg('Error, something is went wrong !', 'error');
+        else if ( response.status === 'exists' ) alert_msg(config.text.error_category, 'error');
+        else alert_msg(config.text.alert_error, 'error');
 
         setLoader(false);
 
     }
     const delete_item = async() => {
 
-        if ( !confirm('Are you sure to delete this category ?') ) return;
+        if ( !confirm(config.text.ask_delete_item) ) return;
 
         setLoader(true);
         const response = await api('category/delete', {ids: JSON.stringify([id]), token: config.user.token});
 
         if ( response.status ) {
-            alert_msg(`Category ( ${id} ) has been deleted successfully`);
+            alert_msg(`${config.text.item} ( ${id} ) ${config.text.deleted_successfully}`);
             return router.replace('/categories');
         }
         else {
-            alert_msg('Error, something is went wrong !', 'error');
+            alert_msg(config.text.alert_error, 'error');
             setLoader(false);
         }
 
@@ -75,7 +75,7 @@ export default function Form_Category ({ id }) {
     }
     useEffect(() => {
 
-        document.title = id ? 'Edit Category' : 'Add Category';
+        document.title = id ? config.text.edit_category : config.text.add_category;
         setMenu(localStorage.getItem('menu'));
         id ? get_item() : default_item();
 
@@ -105,12 +105,12 @@ export default function Form_Category ({ id }) {
                                     <div className="lg:w-1/2 w-full div-3">
 
                                         <div className="flex items-center">
-                                            <label htmlFor="name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Name</label>
+                                            <label htmlFor="name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.name}</label>
                                             <input id="name" type="text" value={data.name || ''} onChange={(e) => setData({...data, name: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
                                         <div className="flex items-center mt-4">
-                                            <label htmlFor="location" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Location</label>
+                                            <label htmlFor="location" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.location}</label>
                                             <input id="location" type="text" value={data.location || ''} onChange={(e) => setData({...data, location: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
@@ -129,12 +129,12 @@ export default function Form_Category ({ id }) {
                                     <div className="lg:w-1/2 w-full ltr:lg:mr-6 rtl:lg:ml-6 mb-4 div-2">
 
                                         <div className="flex items-center mt-4">
-                                            <label htmlFor="company" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-0">Company</label>
+                                            <label htmlFor="company" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-0">{config.text.company}</label>
                                             <input id="company" type="text" value={data.company || ''} onChange={(e) => setData({...data, company: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
                                         <div className="flex items-center mt-4">
-                                            <label htmlFor="create_date" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-0">Create Date</label>
+                                            <label htmlFor="create_date" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-0">{config.text.create_date}</label>
                                             <input id="create_date" type="text" value={fix_date(data.create_date)} readOnly className="form-input flex-1 default"/>
                                         </div>
 
@@ -143,7 +143,7 @@ export default function Form_Category ({ id }) {
                                     <div className="lg:w-1/2 w-full div-3">
 
                                         <div className="flex items-center mt-4">
-                                            <label htmlFor="phone" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Phone</label>
+                                            <label htmlFor="phone" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.phone}</label>
                                             <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
@@ -155,7 +155,7 @@ export default function Form_Category ({ id }) {
 
                             <div className="mt-4 px-4">
                                 
-                                <label htmlFor='description' className="mb-4">Description</label>
+                                <label htmlFor='description' className="mb-4">{config.text.description}</label>
                                 
                                 <textarea id="description" value={data.description || ''} onChange={(e) => setData({...data, description: e.target.value})} className="form-textarea min-h-[80px] no-resize" rows="5"></textarea>
 
@@ -175,7 +175,7 @@ export default function Form_Category ({ id }) {
 
                                     <div>
 
-                                        <label htmlFor="update_date" className="mb-3">Update Date</label>
+                                        <label htmlFor="update_date" className="mb-3">{config.text.update_date}</label>
 
                                         <input id="update_date" type="text" value={fix_date(data.update_date)} className="form-input default" readOnly/>
 
@@ -183,7 +183,7 @@ export default function Form_Category ({ id }) {
                                 
                                     <div>
 
-                                        <label htmlFor="preperties" className="mb-3">Preperties</label>
+                                        <label htmlFor="preperties" className="mb-3">{config.text.products}</label>
 
                                         <input id="preperties" type="number" value={data.products || 0} min="0" className="form-input default" readOnly/>
 
@@ -207,7 +207,7 @@ export default function Form_Category ({ id }) {
 
                                     </label>
 
-                                    <label htmlFor="allow_products" className="ltr:pl-3 rtl:pr-3 pointer">Allow Preperties</label>
+                                    <label htmlFor="allow_products" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.allow_products}</label>
 
                                 </div>
 
@@ -227,7 +227,7 @@ export default function Form_Category ({ id }) {
 
                                     </label>
 
-                                    <label htmlFor="active" className="ltr:pl-3 rtl:pr-3 pointer">Active</label>
+                                    <label htmlFor="active" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.active}</label>
 
                                 </div>
 
@@ -243,7 +243,7 @@ export default function Form_Category ({ id }) {
                                             <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" strokeWidth="1.5" />
                                             <path opacity="0.5" d="M7 8H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                         </svg>
-                                        <span>Save</span>
+                                        <span>{config.text.save}</span>
                                     </button>
                                     <button type="button" className="pointer btn btn-warning w-full gap-2" onClick={close_item}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ltr:mr-2 rtl:ml-2">
@@ -251,7 +251,7 @@ export default function Form_Category ({ id }) {
                                             <circle cx="12" cy="16" r="1" fill="currentColor"></circle>
                                             <path opacity="0.5" d="M7.84308 3.80211C9.8718 2.6007 10.8862 2 12 2C13.1138 2 14.1282 2.6007 16.1569 3.80211L16.8431 4.20846C18.8718 5.40987 19.8862 6.01057 20.4431 7C21 7.98943 21 9.19084 21 11.5937V12.4063C21 14.8092 21 16.0106 20.4431 17C19.8862 17.9894 18.8718 18.5901 16.8431 19.7915L16.1569 20.1979C14.1282 21.3993 13.1138 22 12 22C10.8862 22 9.8718 21.3993 7.84308 20.1979L7.15692 19.7915C5.1282 18.5901 4.11384 17.9894 3.55692 17C3 16.0106 3 14.8092 3 12.4063V11.5937C3 9.19084 3 7.98943 3.55692 7C4.11384 6.01057 5.1282 5.40987 7.15692 4.20846L7.84308 3.80211Z" stroke="currentColor" strokeWidth="1.5"></path>
                                         </svg>
-                                        <span>Cancel</span>
+                                        <span>{config.text.cancel}</span>
                                     </button>
                                     {
                                         id && config.user.delete_categories ?
@@ -263,7 +263,7 @@ export default function Form_Category ({ id }) {
                                                 <path opacity="0.5" d="M9.5 11L10 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                                 <path opacity="0.5" d="M14.5 11L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                             </svg>
-                                            <span>Delete</span>
+                                            <span>{config.text.delete}</span>
                                         </button> : ''
                                     }
 

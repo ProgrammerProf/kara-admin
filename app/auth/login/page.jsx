@@ -1,12 +1,14 @@
 "use client";
 import { api, alert_msg, set_session, date, get_session, print } from '@/public/script/public';
 import Loader from '@/app/component/loader';
+import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Login () {
 
+    const config = useSelector((state) => state.config);
     const router = useRouter();
     const pathname = usePathname();
     const [data, setData] = useState({});
@@ -23,19 +25,19 @@ export default function Login () {
             set_session('user', {...response.user, active: true, update: date()});
             if ( pathname === '/' ) router.replace('/account');
             else router.replace('/');
-            alert_msg('You have been logged in successfully');
+            alert_msg(config.text.login_successfully);
         }
         else if ( response.status === 'exists' ) {
             setLoader(false);
-            alert_msg('Error, this e-mail is not exists !', 'error');
+            alert_msg(config.text.error_email, 'error');
         }
         else if ( response.status === 'not_match' ) {
             setLoader(false);
-            alert_msg('Error, the password is not correct !', 'error');
+            alert_msg(config.text.error_password, 'error');
         }
         else {
             setLoader(false);
-            alert_msg('Error, something is went wrong !', 'error');
+            alert_msg(config.text.alert_error, 'error');
         }
 
     }
@@ -45,30 +47,30 @@ export default function Login () {
         else if ( get_session('user')?.token ) return router.replace('/auth/lock');
         else setAuth(false);
 
-        document.title = "Log In";
+        document.title = config.text.login;
 
     }, []);
 
     return (
 
-        <div className="flex items-center justify-center bg-[url('/media/public/map.svg')] bg-cover bg-center dark:bg-[url('/media/public/map-dark.svg')]" style={{ height: '41rem' }}>
+        <div className="flex items-center justify-center w-full h-[100vh] bg-[url('/media/public/map.svg')] bg-full bg-center dark:bg-[url('/media/public/map-dark.svg')]">
             {
                 !auth &&
                 <div className="panel w-full max-w-[420px] sm:w-[480px] no-select overflow-hidden">
 
-                    <h2 className="mb-2 text-2xl font-bold">Log In</h2>
+                    <h2 className="mb-2 text-2xl font-bold">{config.text.login}</h2>
 
-                    <p className="mb-7">Enter your email and password to login</p>
+                    <p className="mb-7">{config.text.enter_to_login}</p>
 
                     <form className="space-y-6" onSubmit={submit}>
 
                         <div>
-                            <label htmlFor="email" className='mb-3'>E-mail</label>
+                            <label htmlFor="email" className='mb-3'>{config.text.email}</label>
                             <input id="email" type="email" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} required className="form-input" autoComplete='off'/>
                         </div>
                             
                         <div>
-                            <label htmlFor="password" className='mb-3'>Password</label>
+                            <label htmlFor="password" className='mb-3'>{config.text.password}</label>
                             <input id="password" type="password" value={data.password || ''} onChange={(e) => setData({...data, password: e.target.value})} required className="form-input" autoComplete='off'/>
                         </div>
 
@@ -76,26 +78,26 @@ export default function Login () {
                             <label className="cursor-pointer flex">
                                 <input type="checkbox" className="form-checkbox" required checked={data.agree || false} onChange={(e) => setData({...data, agree: !data.agree})}/>
                                 <span className="text-white-dark px-2 pt-[.5px]">
-                                    I agree the Terms and Conditions
+                                    {config.text.agree_terms}
                                 </span>
                             </label>
                         </div>
 
-                        <button type="submit" className="btn btn-primary w-full h-[2.8rem] text-[.95rem]">Login</button>
+                        <button type="submit" className="btn btn-primary w-full h-[2.8rem] text-[.95rem]">{config.text.login}</button>
 
                     </form>
 
                     <div className="relative my-7 mb-4 h-5 text-center before:absolute before:inset-0 before:m-auto before:h-[1px] before:w-full before:bg-[#ebedf2] dark:before:bg-[#253b5c]">
                         
                         <div className="relative z-[1] inline-block bg-white px-2 font-bold text-white-dark dark:bg-black">
-                            <span>OR</span>
+                            <span>{config.text.or}</span>
                         </div>
 
                     </div>
 
-                    <p className="text-left my-2">
-                        Fortgot your password ?
-                        <Link href="tel:+201099188572" className="text-primary hover:underline ltr:ml-2 rtl:mr-2">Call Us</Link>
+                    <p className="text-left my-2 rtl:text-right">
+                        {config.text.forgot_password}
+                        <Link href="tel:+201099188572" className="text-primary hover:underline ltr:ml-2 rtl:mr-2">{config.text.call_us}</Link>
                     </p>
 
                     { loader && <Loader /> }

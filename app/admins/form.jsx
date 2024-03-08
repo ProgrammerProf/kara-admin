@@ -66,42 +66,42 @@ export default function Form_Admin ({ id }) {
         if ( !response.data?.id ) return router.replace('/admins');
         setData(response.data);
         setLoader(false);
-        document.title = `Edit Admin | ${response.data.name || ''}`;
+        document.title = `${config.text.edit_admin} | ${response.data.name || ''}`;
 
     }
     const save_item = async() => {
         
-        if ( !data.name ) return alert_msg('Error, admin name required !', 'error');
-        if ( !data.email ) return alert_msg('Error, admin e-mail required !', 'error');
-        if ( !data.password ) return alert_msg('Error, admin password required !', 'error');
+        if ( !data.name ) return alert_msg(config.text.name_required, 'error');
+        if ( !data.email ) return alert_msg(config.text.email_required, 'error');
+        if ( !data.password ) return alert_msg(config.text.password_required, 'error');
 
         setLoader(true);
         const response = await api(`user/${id ? 'edit' : 'add'}`, {...data, role: 1, token: config.user.token});
 
         if ( response.status === true ) {
-            if ( id ) alert_msg(`Admin ( ${id} ) updated successfully`);
-            else alert_msg(`New admin added successfully`);
+            if ( id ) alert_msg(`${config.text.item} ( ${id} ) - ${config.text.updated_successfully}`);
+            else alert_msg(config.text.new_item_added);
             return router.replace('/admins')
         }
-        else if ( response.status === 'exists' ) alert_msg('This admin e-mail is already exists !', 'error');
-        else alert_msg('Error, something is went wrong !', 'error');
+        else if ( response.status === 'exists' ) alert_msg(config.text.email_exists, 'error');
+        else alert_msg(config.text.alert_error, 'error');
 
         setLoader(false);
 
     }
     const delete_item = async() => {
 
-        if ( !confirm('Are you sure to delete this admin ?') ) return;
+        if ( !confirm(config.text.ask_delete_item) ) return;
 
         setLoader(true);
         const response = await api('user/delete', {ids: JSON.stringify([id]), role: 1, token: config.user.token});
 
         if ( response.status ) {
-            alert_msg(`Admin ( ${id} ) has been deleted successfully`);
+            alert_msg(`${config.text.item} ( ${id} ) ${config.text.deleted_successfully}`);
             return router.replace('/admins');
         }
         else {
-            alert_msg('Error, something is went wrong !', 'error');
+            alert_msg(config.text.alert_error, 'error');
             setLoader(false);
         }
 
@@ -113,7 +113,7 @@ export default function Form_Admin ({ id }) {
     }
     useEffect(() => {
 
-        document.title = id ? 'Edit Admin' : 'Add Admin';
+        document.title = id ? config.text.edit_admin : config.text.add_admin;
         setMenu(localStorage.getItem('menu'));
         id ? get_item() : default_item();
 
@@ -143,31 +143,31 @@ export default function Form_Admin ({ id }) {
                                     <div className="lg:w-1/2 w-full div-3">
 
                                         <div className="flex items-center">
-                                            <label htmlFor="name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Name</label>
+                                            <label htmlFor="name" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.name}</label>
                                             <input id="name" type="text" value={data.name || ''} onChange={(e) => setData({...data, name: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
                                         <div className="flex items-center mt-4">
-                                            <label htmlFor="phone" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Phone</label>
+                                            <label htmlFor="phone" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.phone}</label>
                                             <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
                                         <div className="flex items-center mt-4 mb-4">
-                                            <label htmlFor="email" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">E-mail</label>
-                                            <input id="email" type="text" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input flex-1" autoComplete="off"/>
+                                            <label htmlFor="email" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.email}</label>
+                                            <input id="email" type="email" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
                                         <div className="flex items-center mt-4 mb-4 relative">
                                             {
                                                 data.show_password ?
-                                                <div className="toggle-password flex pointer" onClick={() => setData({...data, show_password: false})}>
+                                                <div className="toggle-password flex pointer ltr:right-[.5rem] rtl:left-[.5rem]" onClick={() => setData({...data, show_password: false})}>
                                                     <span className="material-symbols-outlined icon">visibility</span>
                                                 </div> :
-                                                <div className="toggle-password flex pointer" onClick={() => setData({...data, show_password: true})}>
+                                                <div className="toggle-password flex pointer ltr:right-[.5rem] rtl:left-[.5rem]" onClick={() => setData({...data, show_password: true})}>
                                                     <span className="material-symbols-outlined icon">visibility_off</span>
                                                 </div>
                                             }
-                                            <label htmlFor="password" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">Password</label>
+                                            <label htmlFor="password" className="ltr:mr-2 rtl:ml-2 w-1/3 mb-0 ltr:pl-8 rtl:pr-8">{config.text.password}</label>
                                             <input id="password" type={data.show_password ? 'text' : 'password'} value={data.password || ''} onChange={(e) => setData({...data, password: e.target.value})} className="form-input flex-1" autoComplete="off"/>
                                         </div>
 
@@ -197,7 +197,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="chat" className="ltr:pl-3 rtl:pr-3 pointer">Chat</label>
+                                        <label htmlFor="chat" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.chat}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -214,7 +214,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="mail" className="ltr:pl-3 rtl:pr-3 pointer">Mailbox</label>
+                                        <label htmlFor="mail" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.mail}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -231,26 +231,10 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="notifications" className="ltr:pl-3 rtl:pr-3 pointer">Notifications</label>
+                                        <label htmlFor="notifications" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.notifications}</label>
 
                                     </div>
-                                    <div className="check-input">
-
-                                        <label className="w-12 h-6 relative">
-                                            
-                                            <input onChange={() => setData({...data, statistics: !data.statistics})} checked={data.statistics || false} id="statistics" type="checkbox" className="absolute w-full h-full opacity-0 z-10 pointer peer"/>
-
-                                            <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 
-                                                before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 
-                                                before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary 
-                                                before:transition-all before:duration-300">
-                                            </span>
-
-                                        </label>
-
-                                        <label htmlFor="statistics" className="ltr:pl-3 rtl:pr-3 pointer">Statistics</label>
-
-                                    </div>
+                                   
                                     <div className="check-input">
 
                                         <label className="w-12 h-6 relative">
@@ -265,7 +249,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_categories" className="ltr:pl-3 rtl:pr-3 pointer">See Categories</label>
+                                        <label htmlFor="see_categories" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_categories}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -282,7 +266,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_categories" className="ltr:pl-3 rtl:pr-3 pointer">Add Categories</label>
+                                        <label htmlFor="add_categories" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_categories}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -299,7 +283,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_categories" className="ltr:pl-3 rtl:pr-3 pointer">Delete Categories</label>
+                                        <label htmlFor="delete_categories" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_categories}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -316,7 +300,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_products" className="ltr:pl-3 rtl:pr-3 pointer">See Properties</label>
+                                        <label htmlFor="see_products" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_products}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -333,7 +317,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_products" className="ltr:pl-3 rtl:pr-3 pointer">Add Properties</label>
+                                        <label htmlFor="add_products" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_products}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -350,7 +334,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_products" className="ltr:pl-3 rtl:pr-3 pointer">Delete Properties</label>
+                                        <label htmlFor="delete_products" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_products}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -367,7 +351,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_bookings" className="ltr:pl-3 rtl:pr-3 pointer">See Bookings</label>
+                                        <label htmlFor="see_bookings" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_bookings}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -384,7 +368,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_bookings" className="ltr:pl-3 rtl:pr-3 pointer">Add Bookings</label>
+                                        <label htmlFor="add_bookings" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_bookings}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -401,7 +385,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_bookings" className="ltr:pl-3 rtl:pr-3 pointer">Delete Bookings</label>
+                                        <label htmlFor="delete_bookings" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_bookings}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -418,7 +402,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_coupons" className="ltr:pl-3 rtl:pr-3 pointer">See Coupons</label>
+                                        <label htmlFor="see_coupons" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_coupons}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -435,7 +419,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_coupons" className="ltr:pl-3 rtl:pr-3 pointer">Add Coupons</label>
+                                        <label htmlFor="add_coupons" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_coupons}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -452,7 +436,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_coupons" className="ltr:pl-3 rtl:pr-3 pointer">Delete Coupons</label>
+                                        <label htmlFor="delete_coupons" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_coupons}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -469,7 +453,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_owners" className="ltr:pl-3 rtl:pr-3 pointer">See Owners</label>
+                                        <label htmlFor="see_owners" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_owners}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -486,7 +470,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_owners" className="ltr:pl-3 rtl:pr-3 pointer">Add Owners</label>
+                                        <label htmlFor="add_owners" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_owners}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -503,7 +487,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_owners" className="ltr:pl-3 rtl:pr-3 pointer">Delete Owners</label>
+                                        <label htmlFor="delete_owners" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_owners}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -520,7 +504,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="see_guests" className="ltr:pl-3 rtl:pr-3 pointer">See Guests</label>
+                                        <label htmlFor="see_guests" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.see_guests}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -537,7 +521,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="add_guests" className="ltr:pl-3 rtl:pr-3 pointer">Add Guests</label>
+                                        <label htmlFor="add_guests" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.add_guests}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -554,7 +538,24 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="delete_guests" className="ltr:pl-3 rtl:pr-3 pointer">Delete Guests</label>
+                                        <label htmlFor="delete_guests" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.delete_guests}</label>
+
+                                    </div>
+                                    <div className="check-input">
+
+                                        <label className="w-12 h-6 relative">
+                                            
+                                            <input onChange={() => setData({...data, statistics: !data.statistics})} checked={data.statistics || false} id="statistics" type="checkbox" className="absolute w-full h-full opacity-0 z-10 pointer peer"/>
+
+                                            <span className="bg-[#ebedf2] dark:bg-dark block h-full rounded-full before:absolute before:left-1 
+                                                before:bg-white dark:before:bg-white-dark dark:peer-checked:before:bg-white before:bottom-1 
+                                                before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-primary 
+                                                before:transition-all before:duration-300">
+                                            </span>
+
+                                        </label>
+
+                                        <label htmlFor="statistics" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.statistics}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -571,7 +572,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="control_guests_balance" className="ltr:pl-3 rtl:pr-3 pointer">Control Guests Balance</label>
+                                        <label htmlFor="control_guests_balance" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.control_guests_balance}</label>
 
                                     </div>
                                     <div className="check-input">
@@ -588,7 +589,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="control_owners_balance" className="ltr:pl-3 rtl:pr-3 pointer">Control Owners Balance</label>
+                                        <label htmlFor="control_owners_balance" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.control_owners_balance}</label>
 
                                     </div>
 
@@ -600,7 +601,7 @@ export default function Form_Admin ({ id }) {
 
                             <div className="mt-4 px-4">
                                 
-                                <label htmlFor='notes' className="mb-4">Notes</label>
+                                <label htmlFor='notes' className="mb-4">{config.text.notes}</label>
                                 
                                 <textarea id="notes" value={data.notes || ''} onChange={(e) => setData({...data, notes: e.target.value})} className="form-textarea min-h-[80px] no-resize" rows="5"></textarea>
 
@@ -619,11 +620,11 @@ export default function Form_Admin ({ id }) {
                                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-6 mb-5">
 
                                     <div>
-                                        <label htmlFor="create_date" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">Date</label>
+                                        <label htmlFor="create_date" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">{config.text.date}</label>
                                         <input id="create_date" type="text" value={fix_date(data.create_date)} readOnly className="form-input flex-1 default" autoComplete="off"/>
                                     </div>
                                     <div>
-                                        <label htmlFor="salary" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">Salary</label>
+                                        <label htmlFor="salary" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">{config.text.salary}</label>
                                         <input id="salary" type="number" min='0' value={data.salary || 0} onChange={(e) => setData({...data, salary: e.target.value})}  className="form-input flex-1" autoComplete="off"/>
                                     </div>
 
@@ -632,12 +633,12 @@ export default function Form_Admin ({ id }) {
                                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-6 mb-6">
 
                                     <div>
-                                        <label htmlFor="age" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">Age</label>
+                                        <label htmlFor="age" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">{config.text.age}</label>
                                         <input id="age" type="number" min='0' value={data.age || 0} onChange={(e) => setData({...data, age: e.target.value})}  className="form-input flex-1" autoComplete="off"/>
                                     </div>
 
                                     <div>
-                                        <label htmlFor="country" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">Country</label>
+                                        <label htmlFor="country" className="ltr:mr-2 rtl:ml-2 w-1/4 mb-3">{config.text.country}</label>
                                         <input id="country" type="text" value={data.country} onChange={(e) => setData({...data, country: e.target.value})}  className="form-input flex-1" autoComplete="off"/>
                                     </div>
 
@@ -661,7 +662,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="supervisor" className="ltr:pl-3 rtl:pr-3 pointer">Supervisor</label>
+                                        <label htmlFor="supervisor" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.supervisor}</label>
 
                                     </div>
 
@@ -679,7 +680,7 @@ export default function Form_Admin ({ id }) {
 
                                         </label>
 
-                                        <label htmlFor="active" className="ltr:pl-3 rtl:pr-3 pointer">Active</label>
+                                        <label htmlFor="active" className="ltr:pl-3 rtl:pr-3 pointer">{config.text.active}</label>
 
                                     </div>
 
@@ -697,7 +698,7 @@ export default function Form_Admin ({ id }) {
                                             <path d="M17 22V21C17 19.1144 17 18.1716 16.4142 17.5858C15.8284 17 14.8856 17 13 17H11C9.11438 17 8.17157 17 7.58579 17.5858C7 18.1716 7 19.1144 7 21V22" stroke="currentColor" strokeWidth="1.5" />
                                             <path opacity="0.5" d="M7 8H13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                         </svg>
-                                        <span>Save</span>
+                                        <span>{config.text.save}</span>
                                     </button>
                                     <button type="button" className="pointer btn btn-warning w-full gap-2" onClick={close_item}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 ltr:mr-2 rtl:ml-2">
@@ -705,7 +706,7 @@ export default function Form_Admin ({ id }) {
                                             <circle cx="12" cy="16" r="1" fill="currentColor"></circle>
                                             <path opacity="0.5" d="M7.84308 3.80211C9.8718 2.6007 10.8862 2 12 2C13.1138 2 14.1282 2.6007 16.1569 3.80211L16.8431 4.20846C18.8718 5.40987 19.8862 6.01057 20.4431 7C21 7.98943 21 9.19084 21 11.5937V12.4063C21 14.8092 21 16.0106 20.4431 17C19.8862 17.9894 18.8718 18.5901 16.8431 19.7915L16.1569 20.1979C14.1282 21.3993 13.1138 22 12 22C10.8862 22 9.8718 21.3993 7.84308 20.1979L7.15692 19.7915C5.1282 18.5901 4.11384 17.9894 3.55692 17C3 16.0106 3 14.8092 3 12.4063V11.5937C3 9.19084 3 7.98943 3.55692 7C4.11384 6.01057 5.1282 5.40987 7.15692 4.20846L7.84308 3.80211Z" stroke="currentColor" strokeWidth="1.5"></path>
                                         </svg>
-                                        <span>Cancel</span>
+                                        <span>{config.text.cancel}</span>
                                     </button>
                                     {
                                         id && config.user.supervisor ?
@@ -717,7 +718,7 @@ export default function Form_Admin ({ id }) {
                                                 <path opacity="0.5" d="M9.5 11L10 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                                 <path opacity="0.5" d="M14.5 11L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                             </svg>
-                                            <span>Delete</span>
+                                            <span>{config.text.delete}</span>
                                         </button> : ''
 
                                     }

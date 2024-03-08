@@ -15,11 +15,11 @@ export default function Categories () {
         
         return [
             {
-                accessor: 'invoice', sortable: true, title: 'ID',
+                accessor: 'invoice', sortable: true, title: 'id',
                 render: ({ id }) => <div className="font-semibold select-text default">{id}</div>,
             },
             {
-                accessor: 'name', sortable: true, title: 'Name',
+                accessor: 'name', sortable: true, title: 'name',
                 render: ({ name, id }) => (
                     <div className="flex items-center font-semibold">
                         <div className="h-7 w-7 rounded-[.5rem] overflow-hidden layer-div ltr:mr-3 rtl:ml-3">
@@ -34,19 +34,19 @@ export default function Categories () {
                 ),
             },
             {
-                accessor: 'products', sortable: true, title: 'Preperties',
+                accessor: 'products', sortable: true, title: 'products',
                 render: ({ products, id }) => <div className="font-semibold select-text default">{products}</div>,
             },
             {
-                accessor: 'allow_products', sortable: true, title: 'Allow Properties',
+                accessor: 'allow_products', sortable: true, title: 'allow_products',
                 render: ({ allow_products, id }) => <span className={`badge badge-outline-${allow_products ? 'success' : 'danger'}`}>{allow_products ? 'Allow' : 'Stopped'}</span>,
             },
             {
-                accessor: 'active', sortable: true, title: 'Status',
+                accessor: 'active', sortable: true, title: 'status',
                 render: ({ active, id }) => <span className={`badge badge-outline-${active ? 'success' : 'danger'}`}>{active ? 'Active' : 'Stopped'}</span>,
             },
             {
-                accessor: 'create_date', sortable: true, title: 'Date',
+                accessor: 'create_date', sortable: true, title: 'date',
                 render: ({ create_date, id }) => <div className="font-semibold select-text default">{fix_date(create_date)}</div>,
             },
         ];
@@ -80,7 +80,7 @@ export default function Categories () {
     }
     useEffect(() => {
 
-        document.title = "All Categories";
+        document.title = config.text.all_categories || '';
         get();
 
     }, []);
@@ -88,7 +88,7 @@ export default function Categories () {
     return (
 
         <Table 
-            columns={columns} data={data} delete_={delete_} search={search} async_search={false} btn_name="Add Category"
+            columns={columns} data={data} delete_={delete_} search={search} async_search={false} btn_name='add_category'
             add={() => router.push(`/categories/add`)} edit={(id) => router.push(`/categories/edit/${id}`)} 
             no_delete={!data.length || !config.user.delete_categories} no_search={!data.length} 
             no_add={!config.user.add_categories} no_edit={!config.user.see_categories}

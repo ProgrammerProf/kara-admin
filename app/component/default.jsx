@@ -141,8 +141,6 @@ export default function DefaultLayout ({ children }) {
 
                         <div className="main-content">
 
-                            <Header />
-                        
                             { loader ? '' : <div className={`${animation} animate__animated px-6`}>{ auth ? <Lockscreen /> : <Login /> }</div> }
 
                         </div>

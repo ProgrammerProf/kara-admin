@@ -735,7 +735,7 @@ body.dark{
     }
     .reset-icon, .toggle-password{
         position: absolute; top: auto; cursor: pointer;
-        bottom: .35rem; left: auto; right: .5rem;
+        bottom: .35rem;
         background: rgba(0, 0, 0, .1);
         border-radius: 50%; width: 1.7rem; height: 1.7rem;
         justify-content: center; align-items: center;
@@ -758,6 +758,42 @@ body.dark{
     }
     .screen_loader{
         height: 30rem;
+    }
+}
+
+.ar{
+    .nav-link, a{
+        font-size: 1rem;
+        letter-spacing: .3px;
+    }
+    button{
+        font-size: 1rem;
+        letter-spacing: .3px;
+    }
+    input, textarea, select, option{
+        font-size: .9rem;
+        direction: rtl;
+    }
+    .datatables{
+        table{
+            tr, th, td{
+                text-align: right;
+            }
+            th{
+                font-size: 1rem;
+            }
+        }
+    }
+    .langs-list{
+        button{
+            font-size: .9rem;
+        }
+    }
+    .check-input{
+        label{
+            letter-spacing: .3px;
+            font-size: 1rem;
+        }
     }
 }
 

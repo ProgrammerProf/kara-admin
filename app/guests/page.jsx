@@ -15,11 +15,11 @@ export default function Guests () {
         
         return [
             {
-                accessor: 'invoice', sortable: true, title: 'ID',
+                accessor: 'invoice', sortable: true, title: 'id',
                 render: ({ id }) => <div className="font-semibold select-text default">{id}</div>,
             },
             {
-                accessor: 'name', sortable: true, title: 'Name',
+                accessor: 'name', sortable: true, title: 'name',
                 render: ({ name, id }) => (
                     <div className="flex items-center font-semibold">
                         <div className="h-7 w-7 rounded-full overflow-hidden layer-div ltr:mr-3 rtl:ml-3 -mt-[2px]">
@@ -34,23 +34,23 @@ export default function Guests () {
                 ),
             },
             {
-                accessor: 'phone', sortable: true, title: 'Phone',
+                accessor: 'phone', sortable: true, title: 'phone',
                 render: ({ phone, id }) => <div className="font-semibold select-text default truncate max-w-[10rem]">{phone}</div>,
             },
             {
-                accessor: 'email', sortable: true, title: 'E-mail',
+                accessor: 'email', sortable: true, title: 'email',
                 render: ({ email, id }) => <div className="font-semibold select-text default truncate max-w-[15rem]">{email}</div>,
             },
             {
-                accessor: 'balance', sortable: true, title: 'Balance',
+                accessor: 'balance', sortable: true, title: 'balance',
                 render: ({ balance, id }) => <div className="font-semibold select-text default truncate max-w-[15rem]">{balance} RAS</div>,
             },
             {
-                accessor: 'active', sortable: true, title: 'Status',
+                accessor: 'active', sortable: true, title: 'status',
                 render: ({ active, id }) => <span className={`badge badge-outline-${active ? 'success' : 'danger'}`}>{active ? 'Active' : 'Stopped'}</span>,
             },
             {
-                accessor: 'create_date', sortable: true, title: 'Date',
+                accessor: 'create_date', sortable: true, title: 'date',
                 render: ({ create_date, id }) => <div className="font-semibold select-text default">{fix_date(create_date)}</div>,
             },
         ];
@@ -89,7 +89,7 @@ export default function Guests () {
     }
     useEffect(() => {
 
-        document.title = "All Guests";
+        document.title = config.text.all_guests;
         get();
 
     }, []);
@@ -97,7 +97,7 @@ export default function Guests () {
     return (
 
         <Table 
-            columns={columns} data={data} delete_={delete_} search={search} async_search={false} btn_name="Add Guest"
+            columns={columns} data={data} delete_={delete_} search={search} async_search={false} btn_name="add_guest"
             add={() => router.push(`/guests/add`)} edit={(id) => router.push(`/guests/edit/${id}`)} 
             no_delete={!data.length || !config.user.delete_guests} no_search={!data.length} 
             no_add={!config.user.add_guests} no_edit={!config.user.see_guests}

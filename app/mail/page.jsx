@@ -54,6 +54,8 @@ export default function Mail () {
             name: `Me`,
             create_date: '~~',
             role: config.user.role,
+            super: config.user.super,
+            supervisor: config.user.supervisor,
         }
 
         setUsers([me, ...response.users || []])
@@ -328,7 +330,7 @@ export default function Mail () {
                                 </svg>
                             </button>
 
-                            <h4 className="text-lg font-medium text-gray-600 dark:text-gray-400">Message</h4>
+                            <h4 className="text-lg font-medium text-gray-600 dark:text-gray-400">{config.text.message}</h4>
 
                         </div>
 
@@ -338,7 +340,7 @@ export default function Mail () {
 
                             <div className="flex justify-between items-center">
 
-                                <input type="text" value={mail.receiver?.name || ''} onClick={() => setModel(true)} className="form-select flex-1 pointer" placeholder="Select User ..." readOnly/>
+                                <input type="text" value={mail.receiver?.name || ''} onClick={() => setModel(true)} className="form-select flex-1 pointer" placeholder={config.text.select_user} readOnly/>
 
                                 <input type="text" value={mail.title || ''} onChange={(e) => setMail({...mail, title: e.target.value})} className="form-input" placeholder="Title ..."/>
 
@@ -390,15 +392,15 @@ export default function Mail () {
                                     )
                                 }
 
-                                <button type="button" className="btn btn-primary" onClick={() => fileInput.current?.click()}>Select File</button>
+                                <button type="button" className="btn btn-primary" onClick={() => fileInput.current?.click()}>{config.text.select_file}</button>
 
                                 <input type="file" ref={fileInput} onChange={handle_file} className="hidden" multiple/>
 
                             </div>
 
                             <div className="flex justify-end items-center ltr:ml-auto rtl:mr-auto mt-7 buttons">
-                                <button type="button" onClick={() => { setMail({}); setFiles([]); setTab(0) }} className="btn btn-outline-danger ltr:mr-3 rtl:ml-3">Cancel</button>
-                                <button type="button" onClick={send_mail} className="btn btn-success send-btn">Send Mail</button>
+                                <button type="button" onClick={() => { setMail({}); setFiles([]); setTab(0) }} className="btn btn-outline-danger ltr:mr-3 rtl:ml-3">{config.text.cancel}</button>
+                                <button type="button" onClick={send_mail} className="btn btn-success send-btn">{config.text.send_mail}</button>
                             </div>
 
                             { loader && <Loader /> }
@@ -427,8 +429,8 @@ export default function Mail () {
                             
                                 {
                                     selected.type === 'inbox' ?
-                                    <div className="badge bg-danger hover:top-0 no-select mx-2">Inbox</div> :
-                                    <div className="badge bg-success hover:top-0 no-select mx-2">Send</div>
+                                    <div className="badge bg-danger hover:top-0 no-select mx-2">{config.text.inbox}</div> :
+                                    <div className="badge bg-success hover:top-0 no-select mx-2">{config.text.send}</div>
                                 }
 
                             </div>
@@ -456,7 +458,7 @@ export default function Mail () {
 
                                     <div className="flex items-center -mt-[4px]">
 
-                                        <div className="text-lg ltr:mr-4 rtl:ml-4 whitespace-nowrap">{selected.sender?.id === config.user.id ? 'Me' : selected.sender?.name || ''}</div>
+                                        <div className="text-lg ltr:mr-4 rtl:ml-4 whitespace-nowrap">{selected.sender?.id === config.user.id ? config.text.me : selected.sender?.name || ''}</div>
 
                                         <div className="ltr:mr-4 rtl:ml-4">
                                             <div className="w-2 h-2 bg-success rounded-full"></div>
@@ -482,25 +484,25 @@ export default function Mail () {
                                                 <ul className="sm:w-56" style={{ minWidth: '300px' }}>
                                                     <li>
                                                         <div className="flex items-start px-4 py-2">
-                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">From</div> :
+                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">{config.text.from}</div> :
                                                             <div className="flex-1 px-2">{selected.sender?.id === config.user?.id ? 'Me' : selected.sender?.email || ''}</div>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="flex items-start px-4 py-2">
-                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">To</div> :
+                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">{config.text.to}</div> :
                                                             <div className="flex-1 px-2">{selected.receiver?.id === config.user?.id ? 'Me' : selected.receiver?.email || ''}</div>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="flex items-start px-4 py-2">
-                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">Date</div> :
+                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">{config.text.date}</div> :
                                                             <div className="flex-1 px-2">{selected.date.split(' ')[0]}</div>
                                                         </div>
                                                     </li>
                                                     <li>
                                                         <div className="flex items-start px-4 py-2">
-                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">Title</div> :
+                                                            <div className="text-white-dark ltr:mr-2 rtl:ml-2 w-1/6">{config.text.title}</div> :
                                                             <div className="flex-1 px-2">{selected.title}</div>
                                                         </div>
                                                     </li>
@@ -539,7 +541,7 @@ export default function Mail () {
                                 <div className="mt-8 mail-attachments no-select">
                                     
                                     <div className="h-px border-b border-[#e0e6ed] dark:border-[#1b2e4b]"></div>
-                                    <div className="text-base mt-5">Attachements</div>
+                                    <div className="text-base mt-5">{config.text.attachements}</div>
                                     <div className="flex items-center flex-wrap mt-4">
                                         {
                                             selected.files.map((file, index) => 
@@ -595,7 +597,7 @@ export default function Mail () {
                                 <div className="ltr:mr-4 rtl:ml-4 flex items-center mail-tabs">
 
                                     <button type="button" onClick={() => setTab(1)} className="set-text btn text-white btn-outline-primary bg-primary w-full ltr:sm:mr-4 rtl:sm:ml-4">
-                                        New Message
+                                        {config.text.new_message}
                                     </button>
 
                                     <div className="flex grow items-center sm:flex-none gap-4 ltr:sm:mr-4 rtl:sm:ml-4">
@@ -605,7 +607,7 @@ export default function Mail () {
                                                 <path opacity="0.5" d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z" stroke="currentColor" strokeWidth="1.5"></path>
                                                 <path d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908L18 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                             </svg>
-                                            Inbox
+                                            {config.text.inbox}
                                         </button>
 
                                         <button type="button" onClick={() => { setSearch(''); setType('send'); }} className={`set-text no-shadow btn flex ${type === 'send' ? 'btn-success' : 'btn-outline-success'}`}>
@@ -613,7 +615,7 @@ export default function Mail () {
                                                 <path d="M17.4975 18.4851L20.6281 9.09373C21.8764 5.34874 22.5006 3.47624 21.5122 2.48782C20.5237 1.49939 18.6511 2.12356 14.906 3.37189L5.57477 6.48218C3.49295 7.1761 2.45203 7.52305 2.13608 8.28637C2.06182 8.46577 2.01692 8.65596 2.00311 8.84963C1.94433 9.67365 2.72018 10.4495 4.27188 12.0011L4.55451 12.2837C4.80921 12.5384 4.93655 12.6658 5.03282 12.8075C5.22269 13.0871 5.33046 13.4143 5.34393 13.7519C5.35076 13.9232 5.32403 14.1013 5.27057 14.4574C5.07488 15.7612 4.97703 16.4131 5.0923 16.9147C5.32205 17.9146 6.09599 18.6995 7.09257 18.9433C7.59255 19.0656 8.24576 18.977 9.5522 18.7997L9.62363 18.79C9.99191 18.74 10.1761 18.715 10.3529 18.7257C10.6738 18.745 10.9838 18.8496 11.251 19.0285C11.3981 19.1271 11.5295 19.2585 11.7923 19.5213L12.0436 19.7725C13.5539 21.2828 14.309 22.0379 15.1101 21.9985C15.3309 21.9877 15.5479 21.9365 15.7503 21.8474C16.4844 21.5244 16.8221 20.5113 17.4975 18.4851Z" stroke="currentColor" strokeWidth="1.5"></path>
                                                 <path opacity="0.5" d="M6 18L21 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
                                             </svg>
-                                            Send
+                                            {config.text.send}
                                         </button>
 
                                     </div>
@@ -628,7 +630,7 @@ export default function Mail () {
 
                                     <div className="relative group mail-search">
 
-                                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" className="form-input peer"/>
+                                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={config.text.search} className="form-input peer"/>
 
                                     </div>
 
@@ -692,7 +694,7 @@ export default function Mail () {
                                                                     <path opacity="0.5" d="M5 13L9 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                                                     <path opacity="0.5" d="M19 13L15 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                                                 </svg>
-                                                                Mark as Read
+                                                                {config.text.mark_as_read}
                                                             </button>
                                                         </li>
                                                         <li onClick={() => actions('unread')}>
@@ -701,7 +703,7 @@ export default function Mail () {
                                                                     <path d="M4 8C4 5.17157 4 3.75736 4.87868 2.87868C5.75736 2 7.17157 2 10 2H14C16.8284 2 18.2426 2 19.1213 2.87868C20 3.75736 20 5.17157 20 8V16C20 18.8284 20 20.2426 19.1213 21.1213C18.2426 22 16.8284 22 14 22H10C7.17157 22 5.75736 22 4.87868 21.1213C4 20.2426 4 18.8284 4 16V8Z" stroke="currentColor" strokeWidth="1.5" />
                                                                     <path opacity="0.5" d="M6.12132 16.1022L5.92721 15.3778L6.12132 16.1022ZM3.27556 18.0294C3.16835 18.4295 3.40579 18.8408 3.80589 18.948C4.20599 19.0552 4.61724 18.8178 4.72444 18.4177L3.27556 18.0294ZM6.25 16C6.25 16.4142 6.58579 16.75 7 16.75C7.41421 16.75 7.75 16.4142 7.75 16H6.25ZM7.75 2.5C7.75 2.08579 7.41421 1.75 7 1.75C6.58579 1.75 6.25 2.08579 6.25 2.5H7.75ZM7.89778 16.75H19.8978V15.25H7.89778V16.75ZM7.89778 15.25C7.01609 15.25 6.42812 15.2436 5.92721 15.3778L6.31543 16.8267C6.57752 16.7564 6.91952 16.75 7.89778 16.75V15.25ZM5.92721 15.3778C4.63311 15.7245 3.62231 16.7353 3.27556 18.0294L4.72444 18.4177C4.9325 17.6412 5.53898 17.0347 6.31543 16.8267L5.92721 15.3778ZM7.75 16V2.5H6.25V16H7.75Z" fill="currentColor" />
                                                                 </svg>
-                                                                Mark as Unread
+                                                                {config.text.mark_as_unread}
                                                             </button>
                                                         </li>
                                                         <li onClick={() => actions('delete')}>
@@ -713,7 +715,7 @@ export default function Mail () {
                                                                     <path opacity="0.5" d="M9.5 11L10 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                                                     <path opacity="0.5" d="M14.5 11L14 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                                                                 </svg>
-                                                                Delete
+                                                                {config.text.delete}
                                                             </button>
                                                         </li>
                                                     </ul>
@@ -787,7 +789,7 @@ export default function Mail () {
                                                                 </div>
 
                                                                 <span className='font-medium text-white-dark max-w-[10rem] truncate'>
-                                                                    {item.sender?.id === config.user.id ? 'Me' : item.sender?.name || ''}
+                                                                    {item.sender?.id === config.user.id ? config.text.me : item.sender?.name || ''}
                                                                 </span>
 
                                                             </div>
@@ -834,7 +836,7 @@ export default function Mail () {
                                     </tbody>
                                 </table> :
                                 <div className="grid place-content-center min-h-[420px] h-full no-select empty-mails">
-                                    No data available
+                                    {config.text.no_data}
                                 </div>
                             }
 

@@ -2,12 +2,14 @@
 import { toggle_animation, toggle_layout, toggle_menu, toggle_nav, toggle_dir, toggle_theme, toggle_setting, toggle_text } from '@/public/script/store';
 import { Fragment, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { usePathname } from 'next/navigation';
 import { English } from '@/public/script/langs/en';
 import { Arabic } from '@/public/script/langs/ar';
 
 export default function Setting () {
 
     const dispatch = useDispatch();
+    const pathname = usePathname();
     const config = useSelector((state) => state.config);
     const [button, setButton] = useState(false);
 
@@ -17,22 +19,25 @@ export default function Setting () {
         document.documentElement.scrollTop = 0;
 
     };
-    const prepare_lang = ( lang ) => {
-
-        if ( lang === 'ar' ) dispatch(toggle_dir('rtl'));
-        else dispatch(toggle_dir('ltr'));
-
-    }
     useEffect(() => {
 
-        let data = English;
         let lang = localStorage.getItem('lang');
+       
+        if ( lang === 'ar' ) {
+            dispatch(toggle_dir('rtl'));
+            document.querySelector('html').classList.add('ar');
+        }
+        else {
+            dispatch(toggle_dir('ltr'));
+            document.querySelector('html').classList.remove('ar');
+        }
+
+        let data = English;
+
         if ( lang === 'ar' ) data = Arabic;
-
         dispatch(toggle_text(data));
-        prepare_lang(lang);
 
-    }, [config.lang]);
+    }, [config.lang, pathname]);
     useEffect(() => {
 
         window.addEventListener('scroll', function(){

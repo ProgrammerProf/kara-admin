@@ -35,36 +35,35 @@ export default function Account () {
         const response = await api('account/save', {...data, token: get_session('user').token});
         setLoader(false);
 
-        if ( response.status === true ) {
-            alert_msg('Your account Updated successfully');
+        if ( response.status === true && response.user ) {
+            alert_msg(config.text.account_successfully);
             let user = {...response.user, active: true, update: date()};
             setData(user);
             dispatch(toggle_user(user));
             setTab(0);
+            document.title = `${config.text.account} | ${response.user.name || ''}`;
         }
-        else if ( response.status === 'exists' ) alert_msg('Sorry, this e-mail is already exists !', 'error');
-        else alert_msg('Sorry, something is went wrong !', 'error');
+        else if ( response.status === 'exists' ) alert_msg(config.text.email_exists, 'error');
+        else alert_msg(config.text.alert_error, 'error');
 
     }
     const change_password = async(e) => {
 
         e.preventDefault();
-        if ( data.new_password !== data.new_password1 )
-            return alert_msg('The new password is not equal to confirm password !', 'error');
-        if ( data.new_password === data.old_password )
-            return alert_msg('The new password is equal to old password !', 'error');
+        if ( data.new_password !== data.new_password1 ) return alert_msg(config.text.password_not_equal, 'error');
+        if ( data.new_password === data.old_password ) return alert_msg(config.text.password_not_match, 'error');
 
         setLoader(true);
         const response = await api('account/password', {...data, token: get_session('user').token});
         setLoader(false);
 
         if ( response.status === true ) {
-            alert_msg('Your password changed successfully');
+            alert_msg(config.text.password_successfully);
             setData({...data, old_password: '', new_password: '', new_password1: ''});
             setTab(0);
         }
-        else if ( response.status === 'not_match' ) alert_msg('Your old password is not correct !', 'error');
-        else alert_msg('Sorry, something is went wrong !', 'error');
+        else if ( response.status === 'not_match' ) alert_msg(config.text.error_password_old, 'error');
+        else alert_msg(config.text.alert_error, 'error');
 
     }
     const change_image = ( e ) => {
@@ -77,7 +76,7 @@ export default function Account () {
         fr.onload = () => {
             
             let type = file_info(f, 'type');
-            if ( type !== 'image') return alert_msg('Invalid file format, Image Required !', 'error');
+            if ( type !== 'image') return alert_msg(config.text.error_format, 'error');
             setData({...data, file: f});
             setImage(fr.result);
         
@@ -86,7 +85,7 @@ export default function Account () {
     }
     useEffect(() => {
         
-        document.title = "Account";
+        document.title = `${config.text.account} | ${get_session('user').name || ''}`;
         setData(get_session('user') || {});
         setImage(`${host}/U${get_session('user').id}`);
         get_data();
@@ -144,7 +143,7 @@ export default function Account () {
 
                         <div className="panel w-[27%]">
 
-                            <h5 className="font-semibold text-lg mb-5 no-select">Profile</h5>
+                            <h5 className="font-semibold text-lg mb-5 no-select">{config.text.profile}</h5>
 
                             <div className="rounded-full relative edit-item-info">
 
@@ -167,7 +166,7 @@ export default function Account () {
 
                             </div>
 
-                            <p className="text-center text-[1.3rem] tracking-wide default">Coding Master</p>
+                            <p className="text-center text-[1.3rem] tracking-wide default">{config.user.name || ''}</p>
 
                             <ul className="mt-6 flex flex-col space-y-4 font-semibold mb-[2.9rem]">
 
@@ -218,35 +217,35 @@ export default function Account () {
 
                         <div className="panel lg:col-span-2 xl:col-span-3 w-[71.5%]">
 
-                            <h5 className="mb-7 font-semibold text-lg no-select">General Information</h5>
+                            <h5 className="mb-7 font-semibold text-lg no-select">{config.text.general_information}</h5>
 
                             <form className="mb-2 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 pr-3" onSubmit={save_data}>
 
                                 <div>
-                                    <label htmlFor="name" className="mb-3">Full Name</label>
+                                    <label htmlFor="name" className="mb-3">{config.text.full_name}</label>
                                     <input id="name" type="text" value={data.name || ''} onChange={(e) => setData({...data, name: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div>
-                                    <label htmlFor="phone" className="mb-3">Phone</label>
+                                    <label htmlFor="phone" className="mb-3">{config.text.phone}</label>
                                     <input id="phone" type="text" value={data.phone || ''} onChange={(e) => setData({...data, phone: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div>
-                                    <label htmlFor="email" className="mb-3">E-mail</label>
+                                    <label htmlFor="email" className="mb-3">{config.text.email}</label>
                                     <input id="email" type="email" value={data.email || ''} onChange={(e) => setData({...data, email: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="age" className="mb-3">Age</label>
+                                        <label htmlFor="age" className="mb-3">{config.text.age}</label>
                                         <input id="age" type="number" min="0" value={data.age || 0} onChange={(e) => setData({...data, age: e.target.value})} className="form-input" autoComplete="off"/>
                                     </div>
                                     <div>
-                                        <label htmlFor="date" className="mb-3">Login Date</label>
+                                        <label htmlFor="date" className="mb-3">{config.text.login_date}</label>
                                         <input id="date" type="text" value={fix_date(data.login_date)} readOnly className="form-input default"/>
                                     </div>
                                 </div>
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div>
-                                        <label htmlFor="country" className="mb-3">Country</label>
+                                        <label htmlFor="country" className="mb-3">{config.text.country}</label>
                                         <select id="country" value={data.country || 'su'} onChange={(e) => setData({...data, country: e.target.value})} className="form-select pointer">
                                             <option value="su">Saudi Arabian</option>
                                             <option value="eg">Egypt</option>
@@ -255,7 +254,7 @@ export default function Account () {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="city" className="mb-3">City</label>
+                                        <label htmlFor="city" className="mb-3">{config.text.city}</label>
                                         <select id="city" value={data.city || 'makka'} onChange={(e) => setData({...data, city: e.target.value})} className="form-select pointer">
                                             <option value="makka">Makkah</option>
                                             <option value="gadda">Gadda</option>
@@ -266,7 +265,7 @@ export default function Account () {
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="language" className="mb-3">Language</label>
+                                    <label htmlFor="language" className="mb-3">{config.text.language}</label>
                                     <select id="language" value={data.language || 'ar'} onChange={(e) => setData({...data, language: e.target.value})} className="form-select pointer">
                                         <option value="ar">Arabic</option>
                                         <option value="en">English</option>
@@ -275,11 +274,11 @@ export default function Account () {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor="ip" className="mb-3">IP - Device</label>
+                                    <label htmlFor="ip" className="mb-3">{config.text.ip} - {config.text.device}</label>
                                     <input id="ip" type="text" value={`${data.ip} - ${data.host}`} readOnly className="form-input default"/>
                                 </div>
                                 <div className="sm:col-span-2 flex justify-end">
-                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">Update</button>
+                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">{config.text.update}</button>
                                 </div>
 
                             </form>
@@ -294,24 +293,24 @@ export default function Account () {
 
                         <div className="panel lg:col-span-2 xl:col-span-3 mt-7 w-[40rem]">
 
-                            <h5 className="mb-7 font-semibold text-lg no-select">Change Password</h5>
+                            <h5 className="mb-7 font-semibold text-lg no-select">{config.text.change_password}</h5>
 
                             <form className="mb-2 flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-5 pb-2" onSubmit={change_password}>
 
                                 <div className='mb-2'>
-                                    <label htmlFor="old_password" className="mb-3">Old Password</label>
+                                    <label htmlFor="old_password" className="mb-3">{config.text.old_password}</label>
                                     <input id="old_password" type="password" value={data.old_password || ''} onChange={(e) => setData({...data, old_password: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div className='mb-2'>
-                                    <label htmlFor="new_password" className="mb-3">New Password</label>
+                                    <label htmlFor="new_password" className="mb-3">{config.text.new_password}</label>
                                     <input id="new_password" type="password" value={data.new_password || ''} onChange={(e) => setData({...data, new_password: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div className='mb-2'>
-                                    <label htmlFor="new_password1" className="mb-3">Confirm password</label>
+                                    <label htmlFor="new_password1" className="mb-3">{config.text.confirm_password}</label>
                                     <input id="new_password1" type="password" value={data.new_password1 || ''} onChange={(e) => setData({...data, new_password1: e.target.value})} className="form-input" autoComplete="off" required/>
                                 </div>
                                 <div className="sm:col-span-2 flex justify-end mt-3">
-                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">Submit</button>
+                                    <button type="submit" className="btn btn-primary w-[10rem] h-[2.7rem] text-[.9rem] tracking-wide">{config.text.submit}</button>
                                 </div>
 
                             </form>
