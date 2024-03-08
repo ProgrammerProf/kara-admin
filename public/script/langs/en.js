@@ -332,5 +332,25 @@ export const English = {
     desk_fan: 'Desk Fan',
     necessities: 'Necessities',
     //---------- end -----------------//
-    
+    bookings_confirmed: 'Recently bookings confirmed successfully',
+    products_confirmed: 'Recently properties confirmed successfully',
+    users_confirmed: 'Recently users confirmed successfully',
+    summary: 'Summary',
+    recently_bookings: 'Recently Bookings',
+    recently_products: 'Recently Properties',
+    recently_users: 'Recently Users',
+    confirm: 'Confirm',
+    request: 'Request',
+    no_new_bookings: 'No New Bookings',
+    no_new_products: 'No New Properties',
+    no_new_users: 'No New Users',
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    yearly: 'Yearly',
+    profit: 'Profit',
+    income: 'Income',
+    expenses: 'Expenses',
+    total: 'Total',
+
 }

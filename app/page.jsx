@@ -1,5 +1,5 @@
 "use client";
-import { alert_msg, api, fix_date, fix_number, get_session, host, print } from '@/public/script/public';
+import { alert_msg, api, fix_date, fix_number, get_session, host, lower, print } from '@/public/script/public';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -42,28 +42,28 @@ export default function Home () {
 
         setStatistics({
             'daily': [
-                {name: 'Properties', data: response.properties?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Coupons', data: response.coupons?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Bookings', data: response.bookings?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Visitors', data: response.visitors?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.products, data: response.properties?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.coupons, data: response.coupons?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.bookings, data: response.bookings?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.visitors, data: response.visitors?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'weekly': [
-                {name: 'Properties', data: response.properties?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Coupons', data: response.coupons?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Bookings', data: response.bookings?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Visitors', data: response.visitors?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.products, data: response.properties?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.coupons, data: response.coupons?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.bookings, data: response.bookings?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.visitors, data: response.visitors?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'monthly': [
-                {name: 'Properties', data: response.properties?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Coupons', data: response.coupons?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Bookings', data: response.bookings?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Visitors', data: response.visitors?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.products, data: response.properties?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.coupons, data: response.coupons?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.bookings, data: response.bookings?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.visitors, data: response.visitors?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
             ],
             'yearly': [
-                {name: 'Properties', data: response.properties?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Coupons', data: response.coupons?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Bookings', data: response.bookings?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: 'Visitors', data: response.visitors?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.products, data: response.properties?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.coupons, data: response.coupons?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.bookings, data: response.bookings?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: config.text.visitors, data: response.visitors?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
             ],
         });
 
@@ -72,26 +72,26 @@ export default function Home () {
 
         let ids = orders.map(_ => _.id);
         setOrders([]);
-        if ( ids.length ) alert_msg('Recently bookings confirmed successfully');
+        if ( ids.length ) alert_msg(config.text.bookings_confirmed);
 
     }
     const delete_users = async() => {
 
         let ids = admins.map(_ => _.id);
         setAdmins([]);
-        if ( ids.length ) alert_msg('Recently users confirmed successfully');
+        if ( ids.length ) alert_msg(config.text.users_confirmed);
 
     }
     const delete_products = async() => {
 
         let ids = products.map(_ => _.id);
         setProducts([]);
-        if ( ids.length ) alert_msg('Recently properties confirmed successfully');
+        if ( ids.length ) alert_msg(config.text.products_confirmed);
 
     }
     useEffect(() => {
 
-        document.title = 'Dashboard';
+        document.title = config.text.dashboard;
         get_data();
 
     }, []);
@@ -104,18 +104,18 @@ export default function Home () {
 
                 <div className='panel h-[493px] xl:col-span-2 pb-3'>
 
-                    { statistics && frame === 'daily' ? <Chart type='chart' label='Balance' statistics={statistics['daily']} onChange={_ => setFrame(_)} frame='daily' title='Statistics' summary={settings}/> : ''}
-                    { statistics && frame === 'weekly' ? <Chart type='chart' label='Balance' statistics={statistics['weekly']} onChange={_ => setFrame(_)} frame='weekly' title='Statistics' summary={settings}/> : ''}
-                    { statistics && frame === 'monthly' ? <Chart type='chart' label='Balance' statistics={statistics['monthly']} onChange={_ => setFrame(_)} frame='monthly' title='Statistics' summary={settings}/> : ''}
-                    { statistics && frame === 'yearly' ? <Chart type='chart' label='Balance' statistics={statistics['yearly']} onChange={_ => setFrame(_)} frame='yearly' title='Statistics' summary={settings}/> : ''}
-                    { !statistics && <Chart type='chart' label='Balance' statistics={[]} title='Statistics' summary={settings}/> }
+                    { statistics && frame === 'daily' ? <Chart type='chart' label={config.text.balance} statistics={statistics['daily']} onChange={_ => setFrame(_)} frame='daily' title={config.text.statistics} summary={settings}/> : ''}
+                    { statistics && frame === 'weekly' ? <Chart type='chart' label={config.text.balance} statistics={statistics['weekly']} onChange={_ => setFrame(_)} frame='weekly' title={config.text.statistics} summary={settings}/> : ''}
+                    { statistics && frame === 'monthly' ? <Chart type='chart' label={config.text.balance} statistics={statistics['monthly']} onChange={_ => setFrame(_)} frame='monthly' title={config.text.statistics} summary={settings}/> : ''}
+                    { statistics && frame === 'yearly' ? <Chart type='chart' label={config.text.balance} statistics={statistics['yearly']} onChange={_ => setFrame(_)} frame='yearly' title={config.text.statistics} summary={settings}/> : ''}
+                    { !statistics && <Chart type='chart' label={config.text.balance} statistics={[]} title={config.text.statistics} summary={settings}/> }
                     
                 </div>
 
                 <div className='h-full'>
 
-                    { Object.values(users || {}).length > 0 && <Chart type='category' title='All Users' series={Object.values(users)} label={Object.keys(users)} height={460}/> }
-                    { !Object.values(users || {}).length && <Chart type='category' title='All Users' series={[1]} label={['']} height={460}/> }
+                    { Object.values(users || {}).length > 0 && <Chart type='category' title={config.text.all_users} series={Object.values(users)} label={Object.keys(users)?.map(_ => config.text[lower(_)])} height={460}/> }
+                    { !Object.values(users || {}).length && <Chart type='category' title={config.text.all_users} series={[1]} label={['']} height={460}/> }
                     
                 </div>
 
@@ -123,29 +123,29 @@ export default function Home () {
 
             <div className="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
 
-                { properties.series_daily?.length > 0 && <Chart  type='area' label='Products' title='Products' color='success' light icon='product' total={properties.total} series={properties.series_daily}/> }
-                { !properties.series_daily?.length && <Chart  type='area' label='Products' title='Products' color='success' light icon='product' total={properties.total} series={[]}/> }
+                { properties.series_daily?.length > 0 && <Chart  type='area' label={config.text.products} title={config.text.products} color='success' light icon='product' total={properties.total} series={properties.series_daily}/> }
+                { !properties.series_daily?.length && <Chart  type='area' label={config.text.products} title={config.text.products} color='success' light icon='product' total={properties.total} series={[]}/> }
 
-                { visitors.series_daily?.length > 0 && <Chart  type='area' label='Visitors' title='Visitors' color='warning' icon='user' total={visitors.total} series={visitors.series_daily}/> }
-                { !visitors.series_daily?.length && <Chart  type='area' label='Visitors' title='Visitors' color='warning' icon='user' total={visitors.total} series={[]}/> }
+                { visitors.series_daily?.length > 0 && <Chart  type='area' label={config.text.visitors} title={config.text.visitors} color='warning' icon='user' total={visitors.total} series={visitors.series_daily}/> }
+                { !visitors.series_daily?.length && <Chart  type='area' label={config.text.visitors} title={config.text.visitors} color='warning' icon='user' total={visitors.total} series={[]}/> }
 
-                { bookings.series_daily?.length > 0 && <Chart  type='area' label='Bookings' title='Bookings' color='info' icon='order' total={bookings.total} series={bookings.series_daily}/> }
-                { !bookings.series_daily?.length && <Chart  type='area' label='Bookings' title='Bookings' color='info' icon='order' total={bookings.total} series={[]}/> }
+                { bookings.series_daily?.length > 0 && <Chart  type='area' label={config.text.bookings} title={config.text.bookings} color='info' icon='order' total={bookings.total} series={bookings.series_daily}/> }
+                { !bookings.series_daily?.length && <Chart  type='area' label={config.text.bookings} title={config.text.bookings} color='info' icon='order' total={bookings.total} series={[]}/> }
 
-                { coupons.series_daily?.length > 0 && <Chart  type='area' label='Coupons' title='Coupons' color='secondary' icon='coupon' total={coupons.total} series={coupons.series_daily}/> }
-                { !coupons.series_daily?.length && <Chart  type='area' label='Coupons' title='Coupons' color='secondary' icon='coupon' total={coupons.total} series={[]}/> }
+                { coupons.series_daily?.length > 0 && <Chart  type='area' label={config.text.coupons} title={config.text.coupons} color='secondary' icon='coupon' total={coupons.total} series={coupons.series_daily}/> }
+                { !coupons.series_daily?.length && <Chart  type='area' label={config.text.coupons} title={config.text.coupons} color='secondary' icon='coupon' total={coupons.total} series={[]}/> }
 
             </div>
 
             <div className="mb-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
 
-                <Chart type='summary' title='Summary' summary={settings}/>
+                <Chart type='summary' title={config.text.summary} summary={settings}/>
 
-                { confirmed.series_daily?.length > 0 && <Chart  type='area' label='Confirmed' title='Confirmed' color='success' icon='confirm' total={confirmed.total} series={confirmed.series_daily} height={280}/> }
-                { !confirmed.series_daily?.length && <Chart  type='area' label='Confirmed' title='Confirmed' color='success' icon='confirm' total={confirmed.total} series={[]} height={280}/> }
+                { confirmed.series_daily?.length > 0 && <Chart  type='area' label={config.text.confirmed} title={config.text.confirmed} color='success' icon='confirm' total={confirmed.total} series={confirmed.series_daily} height={280}/> }
+                { !confirmed.series_daily?.length && <Chart  type='area' label={config.text.confirmed} title={config.text.confirmed} color='success' icon='confirm' total={confirmed.total} series={[]} height={280}/> }
 
-                { cancelled.series_daily?.length > 0 && <Chart  type='area' label='Cancelled' title='Cancelled' color='danger' icon='cancel' total={cancelled.total} series={cancelled.series_daily} height={280}/> }
-                { !cancelled.series_daily?.length && <Chart  type='area' label='Cancelled' title='Cancelled' color='danger' icon='cancel' total={cancelled.total} series={[]} height={280}/> }
+                { cancelled.series_daily?.length > 0 && <Chart  type='area' label={config.text.cancelled} title={config.text.cancelled} color='danger' icon='cancel' total={cancelled.total} series={cancelled.series_daily} height={280}/> }
+                { !cancelled.series_daily?.length && <Chart  type='area' label={config.text.cancelled} title={config.text.cancelled} color='danger' icon='cancel' total={cancelled.total} series={[]} height={280}/> }
 
             </div>
 
@@ -155,7 +155,7 @@ export default function Home () {
 
                     <div className="mb-5 flex items-center px-4 justify-between dark:text-white-light no-select">
 
-                        <h5 className="text-base tracking-wide font-semibold">Recently Bookings</h5>
+                        <h5 className="text-base tracking-wide font-semibold">{config.text.recently_bookings}</h5>
 
                         <div className="dropdown">
 
@@ -169,9 +169,9 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    { config.user.see_bookings && <li><button onClick={() => router.push('/bookings')} type="button">All Bookings</button></li> }
-                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
-                                    <li onClick={delete_orders}><button type="button">Mark as Read</button></li>
+                                    { config.user.see_bookings && <li><button onClick={() => router.push('/bookings')} type="button">{config.text.all_bookings}</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">{config.text.all_reports}</button></li> }
+                                    <li onClick={delete_orders}><button type="button">{config.text.mark_as_read}</button></li>
                                 </ul>
 
                             </Dropdown>
@@ -213,18 +213,18 @@ export default function Home () {
                                                 {
                                                     item.status === 1 ?
                                                     <span className="badge badge-outline-warning bg-warning-light text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        Pending
+                                                        {config.text.pending}
                                                     </span>
                                                     : item.status === 2 ?
                                                     <span className="badge badge-outline-warning bg-warning-light text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        Request
+                                                        {config.text.request}
                                                     </span>
                                                     : item.status === 3 ?
                                                     <span className="badge badge-outline-danger bg-danger-light text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        Cancel
+                                                        {config.text.cancel}
                                                     </span> :
                                                     <span className="badge badge-outline-success bg-success-light text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        Confirm
+                                                        {config.text.confirm}
                                                     </span>
                                                 }
                                             </div>
@@ -236,10 +236,10 @@ export default function Home () {
                                                 {
                                                     item.paid ?
                                                     <span className="badge badge-outline-success bg-success-light rounded-[2px] scale-[.9] py-[1px] text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        Paid
+                                                        {config.text.paid}
                                                     </span> :
                                                     <span className="badge badge-outline-danger bg-danger-light rounded-[2px] scale-[.9] py-[1px] text-[.7rem] group-hover:opacity-100 dark:bg-black">
-                                                        No
+                                                        {config.text.not_paid}
                                                     </span>
                                                 }
 
@@ -277,7 +277,7 @@ export default function Home () {
                                 </g>
                             </svg>
 
-                            <span className='mt-1 no-select'>No new bookings</span>
+                            <span className='mt-1 no-select'>{config.text.no_new_bookings}</span>
                             
                         </div>
                     }
@@ -288,7 +288,7 @@ export default function Home () {
 
                     <div className="mb-5 flex items-center px-4 justify-between dark:text-white-light no-select">
 
-                        <h5 className="text-base tracking-wide font-semibold">Recently Users</h5>
+                        <h5 className="text-base tracking-wide font-semibold">{config.text.recently_users}</h5>
 
                         <div className="dropdown">
 
@@ -302,11 +302,11 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    { config.user.see_guests && <li><button onClick={() => router.push('/guests')} type="button">All Guests</button></li> }
-                                    { config.user.see_owners && <li><button onClick={() => router.push('/owners')} type="button">All Owners</button></li> }
-                                    { config.user.supervisor && <li><button onClick={() => router.push('/admins')} type="button">All Admins</button></li> }
-                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
-                                    <li onClick={delete_users}><button type="button">Mark as Read</button></li>
+                                    { config.user.see_guests && <li><button onClick={() => router.push('/guests')} type="button">{config.text.all_guests}</button></li> }
+                                    { config.user.see_owners && <li><button onClick={() => router.push('/owners')} type="button">{config.text.all_owners}</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/admins')} type="button">{config.text.all_admins}</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">{config.text.all_reports}</button></li> }
+                                    <li onClick={delete_users}><button type="button">{config.text.mark_as_read}</button></li>
                                 </ul>
 
                             </Dropdown>
@@ -339,11 +339,11 @@ export default function Home () {
                                             <div className='max-w-[13rem] truncate -mt-[2px]'>{item.name}</div>
 
                                             {
-                                                item.role === 1 ?
-                                                <div className="text-xs mt-1 text-danger">Admin</div>
-                                                : item.role === 2 ?
-                                                <div className="text-xs mt-1 text-primary">Owner</div> :
-                                                <div className="text-xs mt-1 text-success">Guest</div>
+                                                item.role === 1 && item.super ? <div className="text-xs mt-1 text-danger">{config.text.super_admin}</div> : 
+                                                item.role === 1 && item.supervisor ? <div className="text-xs mt-1 text-danger">{config.text.supervisor}</div> : 
+                                                item.role === 1 ? <div className="text-xs mt-1 text-danger">{config.text.admin}</div> : 
+                                                item.role === 2 ? <div className="text-xs mt-1 text-primary">{config.text.owner}</div> : 
+                                                <div className="text-xs mt-1 text-success">{config.text.guest}</div>
                                             }
 
                                         </div>
@@ -384,7 +384,7 @@ export default function Home () {
                                 </g>
                             </svg>
 
-                            <span className='mt-1 no-select'>No new users</span>
+                            <span className='mt-1 no-select'>{config.text.no_new_users}</span>
                             
                         </div>
                     }
@@ -395,7 +395,7 @@ export default function Home () {
 
                     <div className="mb-5 flex items-center px-4 justify-between dark:text-white-light no-select">
 
-                        <h5 className="text-base tracking-wide font-semibold">Recently Properties</h5>
+                        <h5 className="text-base tracking-wide font-semibold">{config.text.recently_products}</h5>
 
                         <div className="dropdown">
 
@@ -409,9 +409,9 @@ export default function Home () {
                                 }>
 
                                 <ul>
-                                    { config.user.see_products && <li><button onClick={() => router.push('/properties')} type="button">All Properties</button></li> }
-                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">All Reports</button></li> }
-                                    <li onClick={delete_products}><button type="button">Mark as Read</button></li>
+                                    { config.user.see_products && <li><button onClick={() => router.push('/properties')} type="button">{config.text.all_products}</button></li> }
+                                    { config.user.supervisor && <li><button onClick={() => router.push('/reports')} type="button">{config.text.all_reports}</button></li> }
+                                    <li onClick={delete_products}><button type="button">{config.text.mark_as_read}</button></li>
                                 </ul>
 
                             </Dropdown>
@@ -443,7 +443,7 @@ export default function Home () {
                                             
                                             <div className='max-w-[13rem] truncate -mt-[2px]'>{item.name}</div>
 
-                                            <div className="text-xs mt-1 text-base opacity-[.8]">{fix_number(item.new_price)} RAS</div>
+                                            <div className="text-xs mt-1 text-base opacity-[.8]">{fix_number(item.new_price)} {config.text.currency}</div>
 
                                         </div>
 
@@ -483,7 +483,7 @@ export default function Home () {
                                 </g>
                             </svg>
 
-                            <span className='mt-1 no-select'>No new properties</span>
+                            <span className='mt-1 no-select'>{config.text.no_new_products}</span>
                             
                         </div>
                     }
