@@ -96,11 +96,6 @@ export default function Table ({ columns, data, add, edit, delete_, search, asyn
         setPage(1);
 
     }, [sortStatus]);
-    useEffect(() => {
-
-        document.title = 'Categories';
-
-    }, []);
 
     return (
 

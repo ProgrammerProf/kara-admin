@@ -3,6 +3,7 @@ import { toggle_animation, toggle_layout, toggle_menu, toggle_nav, toggle_dir, t
 import { Fragment, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { usePathname } from 'next/navigation';
+import { set_session } from '@/public/script/public';
 import { English } from '@/public/script/langs/en';
 import { Arabic } from '@/public/script/langs/ar';
 
@@ -36,6 +37,7 @@ export default function Setting () {
 
         if ( lang === 'ar' ) data = Arabic;
         dispatch(toggle_text(data));
+        set_session('text', data);
 
     }, [config.lang, pathname]);
     useEffect(() => {

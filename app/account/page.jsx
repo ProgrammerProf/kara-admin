@@ -85,7 +85,7 @@ export default function Account () {
     }
     useEffect(() => {
         
-        document.title = `${config.text.account} | ${get_session('user').name || ''}`;
+        document.title = `${config.text.account || get_session('text')?.account} | ${get_session('user').name || ''}`;
         setData(get_session('user') || {});
         setImage(`${host}/U${get_session('user').id}`);
         get_data();

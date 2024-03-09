@@ -82,6 +82,12 @@ export default function Activity ({ activity }) {
         return result;
 
     }
+    useEffect(() => {
+        
+        document.title = config.text.account;
+
+    }, []);
+
     return (
 
         <Table 

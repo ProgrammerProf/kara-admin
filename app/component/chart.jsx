@@ -340,7 +340,7 @@ export default function Chart ({ statistics, frame, type, label, color, light, t
 
                             <p className="text-lg dark:text-white-light/90 default">
 
-                                {label} <span className="mx-2 text-primary">{fix_number(summary.balance - summary.profit).replace(/.0+$/, '')} {config.text.currency}</span>
+                                {label} <span className="mx-2 text-primary ltr:ml-1 rtl:mr-1">{fix_number(summary.balance - summary.profit).replace(/.0+$/, '')} {config.text.currency}</span>
 
                             </p>
 

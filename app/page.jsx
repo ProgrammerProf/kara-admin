@@ -40,30 +40,32 @@ export default function Home () {
         setAdmins(response.recently_users || []);
         setProducts(response.recently_products || []);
 
+        let text = config.text || get_session('text');
+
         setStatistics({
             'daily': [
-                {name: config.text.products, data: response.properties?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.coupons, data: response.coupons?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.bookings, data: response.bookings?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.visitors, data: response.visitors?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.products, data: response.properties?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.coupons, data: response.coupons?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.bookings, data: response.bookings?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.visitors, data: response.visitors?.series_daily || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'weekly': [
-                {name: config.text.products, data: response.properties?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.coupons, data: response.coupons?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.bookings, data: response.bookings?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.visitors, data: response.visitors?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.products, data: response.properties?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.coupons, data: response.coupons?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.bookings, data: response.bookings?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.visitors, data: response.visitors?.series_weekly || [0, 0, 0, 0, 0, 0, 0]},
             ],
             'monthly': [
-                {name: config.text.products, data: response.properties?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.coupons, data: response.coupons?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.bookings, data: response.bookings?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.visitors, data: response.visitors?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: text.products, data: response.properties?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: text.coupons, data: response.coupons?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: text.bookings, data: response.bookings?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                {name: text.visitors, data: response.visitors?.series_monthly || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
             ],
             'yearly': [
-                {name: config.text.products, data: response.properties?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.coupons, data: response.coupons?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.bookings, data: response.bookings?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
-                {name: config.text.visitors, data: response.visitors?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.products, data: response.properties?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.coupons, data: response.coupons?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.bookings, data: response.bookings?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
+                {name: text.visitors, data: response.visitors?.series_yearly || [0, 0, 0, 0, 0, 0, 0]},
             ],
         });
 
@@ -91,7 +93,7 @@ export default function Home () {
     }
     useEffect(() => {
 
-        document.title = config.text.dashboard;
+        document.title = config.text.dashboard || config.text || get_session('text')?.dashboard;
         get_data();
 
     }, []);
