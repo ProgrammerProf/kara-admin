@@ -40,8 +40,7 @@ export default function Home () {
         setAdmins(response.recently_users || []);
         setProducts(response.recently_products || []);
 
-        let text = config.text || get_session('text');
-        print(text)
+        let text = get_session('text');
 
         setStatistics({
             'daily': [
