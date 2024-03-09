@@ -41,6 +41,7 @@ export default function Home () {
         setProducts(response.recently_products || []);
 
         let text = config.text || get_session('text');
+        print(text)
 
         setStatistics({
             'daily': [
@@ -93,7 +94,7 @@ export default function Home () {
     }
     useEffect(() => {
 
-        document.title = config.text.dashboard || config.text || get_session('text')?.dashboard;
+        document.title = config.text.dashboard || get_session('text')?.dashboard;
         get_data();
 
     }, []);
